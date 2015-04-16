@@ -60,7 +60,7 @@ a = [1,2,[3,4,[5]]]
 puts JSON.neat_generate(a)
 #=> [1,2,[3,4,[5]]]
 
-puts JSON.pretty_generate(a)
+puts JSON.pretty_generate(a) # oof!
 #=> [
 #=>   1,
 #=>   2,
@@ -73,7 +73,7 @@ puts JSON.pretty_generate(a)
 #=>   ]
 #=> ]
 
-puts JSON.neat_generate(a,wrap:-1,short:true)
+puts JSON.neat_generate( a, wrap:true, short:true )
 #=> [1,
 #=>  2,
 #=>  [3,
@@ -114,7 +114,9 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## TODO (aka Known Limitations)
 
+* Fix bug with `short:true` and wrapping, nested objects.
 * Figure out the best way to play with custom objects that use `to_json` for their representation.
+* Option for `around_colon` to only apply to multi-line objects.
 * Detect circular references.
 * Possibly allow illegal JSON values like `NaN` or `Infinity`.
 
