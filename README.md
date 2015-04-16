@@ -1,6 +1,10 @@
 # NeatJSON
 Pretty-print your JSON in Ruby with more power than is provided by `JSON.pretty_generate`.
 
+## Installation
+
+`gem install neatjson`
+
 ## Examples
 
 ~~~ ruby
