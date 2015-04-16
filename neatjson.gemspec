@@ -7,7 +7,8 @@ Gem::Specification.new do |s|
 	s.authors     = ["Gavin Kistner"]
 	s.email       = "gavin@phrogz.net"
 	s.homepage    = "http://github.com/Phrogz/NeatJSON"
-	s.summary     = "Pretty, powerful JSON generation."
+	s.summary     = "Pretty, powerful, flexible JSON generation."
+	s.license     = "MIT license (MIT)"
 	s.files       = %w[ lib/**/* ].inject([]){ |all,glob| all+Dir[glob] }
 	s.has_rdoc = 'yard'
 end
