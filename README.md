@@ -157,6 +157,9 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **v0.3.2** - April 16th, 2015
+  * Force YARD to use Markdown for documentation.
+
 * **v0.3.1** - April 16th, 2015
   * Remove some debugging code accidentally left in.
 
