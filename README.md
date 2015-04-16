@@ -5,28 +5,28 @@ Here's an excerpt (from a much larger JSON):
 
 ~~~ json
 {
- "navigation.createroute.poi":[
-   {"text":"Lay in a course to the Hilton","params":{"poi":"Hilton"}},
-   {"text":"Take me to the airport","params":{"poi":"airport"}},
-   {"text":"Let's go to IHOP","params":{"poi":"IHOP"}},
-   {"text":"Show me how to get to The Med","params":{"poi":"The Med"}},
-   {"text":"Create a route to Arby's","params":{"poi":"Arby's"}},
-   {
-     "text":"Go to the Hilton by the Airport",
-     "params":{"poi":"Hilton","location":"Airport"}
-   },
-   {
-     "text":"Take me to the Fry's in Fresno",
-     "params":{"poi":"Fry's","location":"Fresno"}
-   }
- ],
- "navigation.eta":[
-   {"text":"When will we get there?"},
-   {"text":"When will I arrive?"},
-   {"text":"What time will I get to the destination?"},
-   {"text":"What time will I reach the destination?"},
-   {"text":"What time will it be when I arrive?"}
- ]
+  "navigation.createroute.poi":[
+    {"text":"Lay in a course to the Hilton","params":{"poi":"Hilton"}},
+    {"text":"Take me to the airport","params":{"poi":"airport"}},
+    {"text":"Let's go to IHOP","params":{"poi":"IHOP"}},
+    {"text":"Show me how to get to The Med","params":{"poi":"The Med"}},
+    {"text":"Create a route to Arby's","params":{"poi":"Arby's"}},
+    {
+      "text":"Go to the Hilton by the Airport",
+      "params":{"poi":"Hilton","location":"Airport"}
+    },
+    {
+      "text":"Take me to the Fry's in Fresno",
+      "params":{"poi":"Fry's","location":"Fresno"}
+    }
+  ],
+  "navigation.eta":[
+    {"text":"When will we get there?"},
+    {"text":"When will I arrive?"},
+    {"text":"What time will I get to the destination?"},
+    {"text":"What time will I reach the destination?"},
+    {"text":"What time will it be when I arrive?"}
+  ]
 }
 ~~~
 
