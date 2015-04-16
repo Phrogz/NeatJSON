@@ -146,7 +146,6 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## TODO (aka Known Limitations)
 
-* Fix bug with `short:true` and wrapping, nested objects.
 * Figure out the best way to play with custom objects that use `to_json` for their representation.
 * Option for `around_colon` to only apply to multi-line objects.
 * Detect circular references.
@@ -154,6 +153,9 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 * Possibly allow "JSON5" output (legal identifiers unquoted, etc.)
 
 ## HISTORY
+
+* **v0.3.1** - April 16th, 2015
+  * Remove some debugging code accidentally left in.
 
 * **v0.3** - April 16th, 2015
   * Fix another bug with `short:true` and wrapping array values inside objects.
