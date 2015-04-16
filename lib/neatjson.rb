@@ -40,7 +40,6 @@ module JSON
 		colon = "#{' '*opts[:before_colon]}:#{' '*opts[:after_colon]}"
 
 		build = ->(o,indent) do
-			puts "OH! #{indent.inspect}" if indent=~/\S/
 			case o
 				when String               then "#{indent}#{o.inspect}"
 				when Symbol               then "#{indent}#{o.to_s.inspect}"
