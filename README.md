@@ -1,4 +1,7 @@
 # NeatJSON
+
+[![Gem Version](https://badge.fury.io/rb/neatjson.svg)](http://badge.fury.io/rb/neatjson)
+
 Pretty-print your JSON in Ruby with more power than is provided by `JSON.pretty_generate`. In particular, like Ruby's `pp` (pretty print), NeatJSON will keep objects on one line if they fit, but break them over multiple lines if needed.
 
 Here's an excerpt (from a much larger JSON):
