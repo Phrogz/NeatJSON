@@ -83,9 +83,17 @@ module JSON
 								longest = keyvals.map(&:first).map(&:length).max
 								keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
 							end
-							pieces = keyvals.map{ |k,v| "#{k}#{colon}#{build[v,'']}" }
-							pieces.last << opad << "}"
-							pieces.join ",\n"
+							keyvals.map! do |k,v|
+								indent2 = " "*"#{k}#{colon}".length
+								one_line = "#{k}#{colon}#{build[v,'']}"
+								if opts[:wrap] && (one_line.length > opts[:wrap]) && (v.is_a?(Array) || v.is_a?(Hash))
+									"#{k}#{colon}#{build[v,indent2].lstrip}"
+								else
+									one_line
+								end
+							end
+							keyvals.last << opad << "}"
+							keyvals.join ",\n"
 						else
 							keyvals = o.map{ |k,v| ["#{indent}#{opts[:indent]}#{k.to_s.inspect}",v] }
 							keyvals = keyvals.sort_by(&:first) if opts[:sorted]

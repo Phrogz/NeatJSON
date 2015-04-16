@@ -109,6 +109,15 @@ class TestFlexiJSON < Minitest::Unit::TestCase
 		assert_equal '{"a":1,"b":[2,3,4],"c":3}', JSON.neat_generate(@ha)
 		assert_equal %Q{{\n  "a":1,\n  "b":[2,3,4],\n  "c":3\n}}, JSON.neat_generate(@ha,wrap:10)
 		assert_equal %Q{{\n  "a":1,\n  "b":[\n    2,\n    3,\n    4\n  ],\n  "c":3\n}}, JSON.neat_generate(@ha,wrap:true)
+
+		@ha2 = {hooo:42,whee:%w[yaaa oooo booy],zoop:"whoop"}
+		assert_equal <<-ENDFORMAT.chomp, JSON.neat_generate(@ha2,wrap:20,short:true)
+{"hooo":42,
+ "whee":["yaaa",
+         "oooo",
+         "booy"],
+ "zoop":"whoop"}
+		ENDFORMAT
 	end
 
 	def test_custom

@@ -144,7 +144,6 @@ See the LICENSE.txt file for more details.
 For bugs or feature requests please open [issues on GitHub][1].
 For other communication you can [email the author directly](mailto:!@phrogz.net?subject=NeatJSON).
 
-
 ## TODO (aka Known Limitations)
 
 * Fix bug with `short:true` and wrapping, nested objects.
@@ -153,5 +152,13 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 * Detect circular references.
 * Possibly allow illegal JSON values like `NaN` or `Infinity`.
 * Possibly allow "JSON5" output (legal identifiers unquoted, etc.)
+
+## HISTORY
+
+* **v0.2** - April 16th, 2015
+  * Fix bug with `short:true` and wrapping values inside objects.
+
+* **v0.1** - April 15th, 2015
+  * Initial release.
 
 [1]: https://github.com/Phrogz/NeatJSON/issues
