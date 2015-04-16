@@ -95,28 +95,36 @@ class TestFlexiJSON < Minitest::Unit::TestCase
 	end
 
 	def test_mixed
-		@ah = [1,{a:2},3]
-		assert_equal '[1,{"a":2},3]', JSON.neat_generate(@ah)
-		assert_equal '[ 1,{ "a":2 },3 ]', JSON.neat_generate(@ah,padding:1)
-		assert_equal '[ 1, { "a":2 }, 3 ]', JSON.neat_generate(@ah,padding:1,after_comma:1)
-		assert_equal %Q{[\n  1,\n  {\n    "a":2\n  },\n  3\n]}, JSON.neat_generate(@ah,wrap:true)
-		assert_equal %Q{[\n  1,\n  {"a":2},\n  3\n]}, JSON.neat_generate(@ah,wrap:10)
+		a = [1,{a:2},3]
+		assert_equal '[1,{"a":2},3]', JSON.neat_generate(a)
+		assert_equal '[ 1,{ "a":2 },3 ]', JSON.neat_generate(a,padding:1)
+		assert_equal '[ 1, { "a":2 }, 3 ]', JSON.neat_generate(a,padding:1,after_comma:1)
+		assert_equal %Q{[\n  1,\n  {\n    "a":2\n  },\n  3\n]}, JSON.neat_generate(a,wrap:true)
+		assert_equal %Q{[\n  1,\n  {"a":2},\n  3\n]}, JSON.neat_generate(a,wrap:10)
 
-		@ah2 = [1,{a:2,b:3},4]
-		assert_equal "[1,\n {\"a\":2,\n  \"b\":3},\n 4]", JSON.neat_generate(@ah2,wrap:0,short:true)
+		a = [1,{a:2,b:3},4]
+		assert_equal "[1,\n {\"a\":2,\n  \"b\":3},\n 4]", JSON.neat_generate(a,wrap:0,short:true)
 
-		@ha = {a:1,b:[2,3,4],c:3}
-		assert_equal '{"a":1,"b":[2,3,4],"c":3}', JSON.neat_generate(@ha)
-		assert_equal %Q{{\n  "a":1,\n  "b":[2,3,4],\n  "c":3\n}}, JSON.neat_generate(@ha,wrap:10)
-		assert_equal %Q{{\n  "a":1,\n  "b":[\n    2,\n    3,\n    4\n  ],\n  "c":3\n}}, JSON.neat_generate(@ha,wrap:true)
+		h = {a:1,b:[2,3,4],c:3}
+		assert_equal '{"a":1,"b":[2,3,4],"c":3}', JSON.neat_generate(h)
+		assert_equal %Q{{\n  "a":1,\n  "b":[2,3,4],\n  "c":3\n}}, JSON.neat_generate(h,wrap:10)
+		assert_equal %Q{{\n  "a":1,\n  "b":[\n    2,\n    3,\n    4\n  ],\n  "c":3\n}}, JSON.neat_generate(h,wrap:true)
 
-		@ha2 = {hooo:42,whee:%w[yaaa oooo booy],zoop:"whoop"}
-		assert_equal <<-ENDFORMAT.chomp, JSON.neat_generate(@ha2,wrap:20,short:true)
+		h = {hooo:42,whee:%w[yaaa oooo booy],zoop:"whoop"}
+		assert_equal <<-ENDFORMAT.chomp, JSON.neat_generate(h,wrap:20,short:true)
 {"hooo":42,
  "whee":["yaaa",
          "oooo",
          "booy"],
  "zoop":"whoop"}
+		ENDFORMAT
+
+		h = { a:[ {x:"foo",y:"jim"}, {x:"bar",y:"jam"} ] }
+		assert_equal <<-ENDFORMAT.chomp, JSON.neat_generate(h,wrap:true,short:true)
+{"a":[{"x":"foo",
+       "y":"jim"},
+      {"x":"bar",
+       "y":"jam"}]}
 		ENDFORMAT
 	end
 

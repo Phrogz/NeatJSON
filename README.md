@@ -155,6 +155,9 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **v0.3** - April 16th, 2015
+  * Fix another bug with `short:true` and wrapping array values inside objects.
+
 * **v0.2** - April 16th, 2015
   * Fix bug with `short:true` and wrapping values inside objects.
 

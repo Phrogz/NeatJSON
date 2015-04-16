@@ -40,6 +40,7 @@ module JSON
 		colon = "#{' '*opts[:before_colon]}:#{' '*opts[:after_colon]}"
 
 		build = ->(o,indent) do
+			puts "OH! #{indent.inspect}" if indent=~/\S/
 			case o
 				when String               then "#{indent}#{o.inspect}"
 				when Symbol               then "#{indent}#{o.to_s.inspect}"
@@ -59,7 +60,7 @@ module JSON
 						one_line
 					elsif opts[:short]
 						pieces = o.map{ |v| build[ v,"#{indent} #{apad}" ] }
-						pieces[0] = build[ o.first, "#{indent}[#{apad}" ]
+						pieces[0].sub! /^#{indent} #{apad}/, "#{indent}[#{apad}"
 						pieces.last << apad << "]"
 						pieces.join ",\n"
 					else
