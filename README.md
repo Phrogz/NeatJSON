@@ -62,10 +62,10 @@ puts JSON.neat_generate(o,sorted:true,wrap:40)
 #=>   "str":"yes\nplease"
 #=> }
 
-puts JSON.neat_generate(o,sorted:true,wrap:40,decimals:1)
+puts JSON.neat_generate(o,sorted:true,wrap:40,decimals:2)
 #=> {
-#=>   "a":[42.0,17.0],
-#=>   "b":42.0,
+#=>   "a":[42,17],
+#=>   "b":42.01,
 #=>   "longer":true,
 #=>   "str":"yes\nplease"
 #=> }
@@ -126,7 +126,7 @@ You may pass any of the following option symbols to `neat_generate`:
   * _This causes the `:indent` option to be ignored, instead basing indentation on array and object padding._
 * `:sorted`         — Sort the keys for objects to be in alphabetical order? Default: `false`
 * `:aligned`        — When wrapping objects, line up the colons (per object)? Default: `false`
-* `:decimals`       — Decimal precision to use for numbers; use `false` to keep numeric values precise. Default: `false`
+* `:decimals`       — Decimal precision to use for non-integer numbers; use `false` to keep float values precise. Default: `false`
 * `:array_padding`  — Number of spaces to put inside brackets for arrays. Default: `0`
 * `:object_padding` — Number of spaces to put inside braces for objects.  Default: `0`
 * `:padding`        — Shorthand to set both `:array_padding` and `:object_padding`. Default: `0`
@@ -156,6 +156,11 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 * Possibly allow "JSON5" output (legal identifiers unquoted, etc.)
 
 ## HISTORY
+
+* **v0.5** - April 19th, 2015
+  * Do not format integers (or floats that equal their integer) using `decimals` option.
+  * Make `neatJSON()` JavaScript available to Node.js as well as web browsers.
+  * Add (Node-based) testing for the JavaScript version.
 
 * **v0.4** - April 18th, 2015
   * Add JavaScript version with online runner.

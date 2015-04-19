@@ -2,13 +2,13 @@
 require 'date'
 Gem::Specification.new do |s|
 	s.name          = "neatjson"
-	s.version       = "0.4"
+	s.version       = "0.5"
 	s.date          = Date.today.iso8601
 	s.authors       = ["Gavin Kistner"]
 	s.email         = "gavin@phrogz.net"
 	s.homepage      = "http://github.com/Phrogz/NeatJSON"
 	s.summary       = "Pretty, powerful, flexible JSON generation."
-	s.description   = "Generate JSON strings from Ruby objects with flexible formatting options. The most important feature is that it can behave like pp, keeping arrays and objects on a single line when they fit."
+	s.description   = "Generate JSON strings from Ruby objects with flexible formatting options. Key features: keep arrays and objects on a single line when they fit; format floats to specific precision; sort and align object keys; adjust whitespace padding of arrays and objects, inside and around commas and colons. JavaScript version included."
 	s.license       = "MIT license (MIT)"
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
