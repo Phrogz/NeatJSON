@@ -58,19 +58,20 @@ module JSON
 					if !opts[:wrap] || (one_line.length <= opts[:wrap])
 						one_line
 					elsif opts[:short]
-						pieces = o.map{ |v| build[ v,"#{indent} #{apad}" ] }
-						pieces[0].sub! /^#{indent} #{apad}/, "#{indent}[#{apad}"
+						indent2 = "#{indent} #{apad}"
+						pieces = o.map{ |v| build[ v,indent2 ] }
+						pieces[0].sub! indent2, "#{indent}[#{apad}"
 						pieces.last << apad << "]"
 						pieces.join ",\n"
 					else
 						indent2 = "#{indent}#{opts[:indent]}"
-						"#{indent}[\n#{o.map{ |x| build[ x, indent2 ] }.join ",\n"}\n#{indent}]"
+						"#{indent}[\n#{o.map{ |v| build[ v, indent2 ] }.join ",\n"}\n#{indent}]"
 					end
 
 				when Hash
 					keyvals = o.map{ |k,v| [ k.to_s.inspect, build[v,''] ] }
 					keyvals = keyvals.sort_by(&:first) if opts[:sorted]
-					keyvals = keyvals.map{ |a,b| [a,b].join(colon) }.join(comma)
+					keyvals = keyvals.map{ |kv| kv.join(colon) }.join(comma)
 					one_line = "#{indent}{#{opad}#{keyvals}#{opad}}"
 					if !opts[:wrap] || (one_line.length <= opts[:wrap])
 						one_line
@@ -92,8 +93,7 @@ module JSON
 									one_line
 								end
 							end
-							keyvals.last << opad << "}"
-							keyvals.join ",\n"
+							keyvals.join(",\n") << opad << "}"
 						else
 							keyvals = o.map{ |k,v| ["#{indent}#{opts[:indent]}#{k.to_s.inspect}",v] }
 							keyvals = keyvals.sort_by(&:first) if opts[:sorted]
