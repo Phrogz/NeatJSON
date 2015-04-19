@@ -65,7 +65,6 @@ function neatJSON(value,opts){
 							var k=keyvals[i][0], v=keyvals[i][1];
 							var indent2 = repeat(' ',(k+colon).length);
 							var oneLine = k+colon+build(v,'');
-							// console.log(opts.wrap, oneLine.length, !v, typeof v)
 							keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colon+build(v,indent2).replace(/^\s+/,''));
 						}
 						return keyvals.join(',\n') + opad + '}';
