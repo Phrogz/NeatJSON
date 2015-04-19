@@ -11,7 +11,7 @@ module JSON
 	# @option opts [Boolean] :short      (false) Keep the output 'short' when wrapping, putting opening brackets on the same line as the first value, and closing brackets on the same line as the last item.
 	# @option opts [Boolean] :sorted     (false) Sort the keys for objects to be in alphabetical order.
 	# @option opts [Boolean] :aligned    (false) When wrapping objects, align the colons (only per object).
-	# @option opts [Integer] :decimals    (null) Decimal precision to use for numbers; omit to keep numberic values precise.
+	# @option opts [Integer] :decimals    (null) Decimal precision to use for floats; omit to keep numberic values precise.
 	# @option opts [Integer] :padding        (0) Number of spaces to put inside brackets/braces for both arrays and objects.
 	# @option opts [Integer] :array_padding  (0) Number of spaces to put inside brackets for arrays. Overrides `:padding`.
 	# @option opts [Integer] :object_padding (0) Number of spaces to put inside braces for objects. Overrides `:padding`.
@@ -41,12 +41,14 @@ module JSON
 
 		build = ->(o,indent) do
 			case o
-				when String               then "#{indent}#{o.inspect}"
+				when String,Integer       then "#{indent}#{o.inspect}"
 				when Symbol               then "#{indent}#{o.to_s.inspect}"
 				when TrueClass,FalseClass then "#{indent}#{o}"
 				when NilClass             then "#{indent}null"
-				when Numeric
-					if opts[:decimals]
+				when Float
+					if (o==o.to_i) && (o.to_s !~ /e/)
+						build[o.to_i,indent]
+					elsif opts[:decimals]
 						"#{indent}%.#{opts[:decimals]}f" % o
 					else
 						"#{indent}#{o}"
