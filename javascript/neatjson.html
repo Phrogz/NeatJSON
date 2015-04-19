@@ -3,7 +3,10 @@
 	<meta charset="utf-8">
 	<title>NeatJSON Online</title>
 	<style type="text/css">
-		h1 { background:#444; color:#ccc; text-align:center; margin:0; padding:0.2em 0; margin-bottom:1em; }
+		h1 { background:#444; color:#ccc; text-align:center; margin:0; padding:0; margin-bottom:1em; font-size:24px; padding:6px 20px; font-family:sans-serif }
+		#content { position:absolute; top:40px; bottom:0; left:0; right:0; padding:1em; }
+		p { margin:0; padding:0; }
+		#description { padding-right:60px }
 		html, body { height:100%; min-height:100%; padding:0; margin:0; background:#eee; }
 		#input, #output { display:block; width:90%; margin:1em auto; min-height:35%; background:#fff; }
 		#code { display:block; width:90%; margin:1em auto }
@@ -11,11 +14,13 @@
 		label { padding-right:0.6em }
 		#options { width:90%; margin:1em auto }
 		.option { display:inline-block; margin-right:2em; user-select:none; -webkit-user-select:none; }
-		input[type="range"] { width:5em }
+		input[type="range"] { width:7em }
 		b { background:yellow }
 	</style>
 </head><body>
-<h1>NeatJSON Online v0.4</h1>
+<h1>NeatJSON Online</h1>
+<div id="content">
+<p id="description">NeatJSON provides <a href="https://rubygems.org/gems/neatjson">Ruby</a> and JavaScript libraries for formatting <a href="http://json.org/">JSON</a> strings. To test it out, paste your JSON (formatted however) into the top box below, adjust the formatting options, and see the results at the bottom.</p>
 <div id="options">
 	<div class="option-row">
 		<span class="option">
@@ -41,11 +46,13 @@
 	</div>
 </div>
 
-	<textarea id="input">["foo","bar",{"dogs":42,"piggies":0,"cats":7},{"jimmy":[1,2,3,4,5],"jammy":3.14159265358979,"hot":"pajammy"}]</textarea>
-	<pre id="code"></pre>
-	<pre id="output"></pre>
-	<script type="text/javascript" src="neatjson.js"></script>
-	<script type="text/javascript">
+<textarea id="input">["foo","bar",{"dogs":42,"piggies":0,"cats":7},{"jimmy":[1,2,3,4,5],"jammy":3.14159265358979,"hot":"pajammy"}]</textarea>
+<pre id="code"></pre>
+<pre id="output"></pre>
+<div id="copyright">NeatJSON is copyright ©2015 Gavin Kistner. Available under the <a href="https://raw.githubusercontent.com/Phrogz/NeatJSON/master/LICENSE.txt">MIT License</a>. For feature requests and bug reports please use the <a href="https://github.com/Phrogz/NeatJSON/issues">GitHub Issues</a> page.</div>
+<script type="text/javascript" src="neatjson.js"></script>
+<script type="text/javascript">
+	document.querySelector('h1').innerHTML += " v"+neatJSON.version;
 	var opts = document.querySelectorAll('input');
 	[].forEach.call(opts,function(opt){
 		opt.addEventListener('input',neaten,false);
@@ -148,4 +155,6 @@
 		return true;
 	}
 </script>
+</div>
+<a href="https://github.com/Phrogz/NeatJSON"><img style="position:absolute;top:0;right:0;border:0" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
 </body></html>
