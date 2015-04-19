@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8">
+	<title>NeatJSON Online</title>
+	<style type="text/css">
+		h1 { background:#444; color:#ccc; text-align:center; margin:0; padding:0.2em 0; margin-bottom:1em; }
+		html, body { height:100%; min-height:100%; padding:0; margin:0; background:#eee; }
+		#input, #output, #code { display:block; width:90%; margin:1em auto; height:35%; background:#fff; }
+		#code { height:1em; background:none; }
+		#output { border:1px solid green; background:rgba(100,255,0,0.5); color:#080 }
+		label { padding-right:0.6em }
+		#options { width:90%; margin:1em auto }
+		.option { display:inline-block; margin-right:2em; user-select:none; -webkit-user-select:none; }
+		input[type="range"] { width:5em }
+		b { background:yellow }
+	</style>
+</head><body>
+<h1>NeatJSON Online v0.3</h1>
+<div id="options">
+	<div class="option-row">
+		<span class="option">
+			<label><input	type="checkbox" id="wrap" checked> Wrap?</label>
+			<label id="wrapopts1">width <input type="text" id="wrapSize" value="40" size="3"></label>
+			<label id="wrapopts2"><input type="checkbox" id="short"> Short?</label>
+			<label id="wrapopts3"><input type="checkbox" id="aligned"> Align Keys?</label>
+		</span>
+		<span class="option"><label><input type="checkbox" id="sorted"> Sort Keys?</label></span>
+		<span class="option">
+			<label><input	type="checkbox" id="useDecimals"> Format Decimals?</label>
+			<input type="text" id="decimals" value="3" size="3" min="0" max="10" style="visibility:hidden">
+		</span>
+	</div><div class="option-row">
+		<span class="option"><label>Indent Spaces <input type="range" id="indent" value="2" min="0" max="5" step="1"></label></span>
+		<span class="option"><label>Array Padding<input type="range" id="arrayPadding"  value="0" min="0" max="3" step="1"></label></span>
+		<span class="option"><label>Object Padding<input type="range" id="objectPadding"  value="0" min="0" max="3" step="1"></label></span>
+	</div><div class="option-row">
+		<span class="option"><label>Before Comma<input type="range" id="beforeComma"   value="0" min="0" max="3" step="1"></label></span>
+		<span class="option"><label>After Comma<input type="range" id="afterComma"   value="0" min="0" max="3" step="1"></label></span>
+		<span class="option"><label>Before Colon<input type="range" id="beforeColon"   value="0" min="0" max="3" step="1"></label></span>
+		<span class="option"><label>After Colon<input type="range" id="afterColon"   value="0" min="0" max="3" step="1"></label></span>
+	</div>
+</div>
+
+	<textarea id="input">["foo","bar",{"dogs":42,"piggies":0,"cats":7},{"jimmy":[1,2,3,4,5],"jammy":3.14159265358979,"hot":"pajammy"}]</textarea>
+	<pre id="code"></pre>
+	<pre id="output"></pre>
+	<script type="text/javascript" src="neatjson.js"></script>
+	<script type="text/javascript">
+	var opts = document.querySelectorAll('input');
+	[].forEach.call(opts,function(opt){
+		opt.addEventListener('input',neaten,false);
+		opt.addEventListener('change',neaten,false);
+		opt.addEventListener('click',neaten,false);
+	})
+
+	var inp = document.querySelector('#input'),
+	    cde = document.querySelector('#code'),
+	    out = document.querySelector('#output');
+	var opts;
+
+	var wrap  = document.querySelector('#wrap'),
+	    wdth  = document.querySelector('#wrapSize'),
+	    shrt  = document.querySelector('#short'),
+	    dec0  = document.querySelector('#useDecimals'),
+	    decN  = document.querySelector('#decimals'),
+	    sort  = document.querySelector('#sorted'),
+	    algn  = document.querySelector('#aligned'),
+	    indN  = document.querySelector('#indent'),
+	    arrayPadding  = document.querySelector('#arrayPadding'),
+	    objectPadding = document.querySelector('#objectPadding'),
+	    beforeComma   = document.querySelector('#beforeComma'),
+	    afterComma    = document.querySelector('#afterComma'),
+	    beforeColon   = document.querySelector('#beforeColon'),
+	    afterColon    = document.querySelector('#afterColon');
+
+	window.onload = neaten;
+	inp.addEventListener('input',neaten,false);
+
+	function neaten(){
+		try{
+			changeOptions();
+			if (isEmpty(opts)){
+				code.innerHTML = "var json = neatJSON(obj);";
+			}else{
+				var parts=[];
+				for (var k in opts) parts.push('<b>'+k+'</b>:'+JSON.stringify(opts[k]));
+				code.innerHTML = "var json = neatJSON(obj,{ "+parts.join(', ')+" });";
+			}
+			out.innerHTML = neatJSON(JSON.parse(inp.value),opts);
+		}catch(e){
+			out.innerHTML = e;
+		}
+	}
+
+	function changeOptions() {
+		opts = {};
+		if (!wrap.checked || wdth.value!=80) opts.wrap = wrap.checked ? (wdth.value=='' ? true : wdth.value*1) : false;
+		if (wrap.checked && shrt.checked) opts.short = true;
+		document.querySelector('#wrapopts1').style.visibility = wrap.checked ? '' : 'hidden';
+		document.querySelector('#wrapopts2').style.visibility = wrap.checked ? '' : 'hidden';
+		document.querySelector('#wrapopts3').style.visibility = wrap.checked ? '' : 'hidden';
+
+		if (indN.value!=2 && (wrap.checked && !shrt.checked)) opts.indent = repeat(' ',indN.value*1);
+
+		if (dec0.checked){
+			opts.decimals = decN.value*1;
+			decN.style.visibility = '';
+		}else{
+			decN.style.visibility = 'hidden';
+		}
+
+		if (sort.checked) opts.sorted = true;
+		if (wrap.checked && algn.checked) opts.aligned = true;
+
+		if (arrayPadding.value!=0 && objectPadding.value==arrayPadding.value){
+			opts.padding = arrayPadding.value*1;
+		}else{
+			if (arrayPadding.value!=0) opts.arrayPadding = arrayPadding.value*1;
+			if (objectPadding.value!=0) opts.objectPadding = objectPadding.value*1;
+		}
+		if (beforeComma.value!=0 && beforeComma.value==afterComma.value){
+			opts.aroundComma = beforeComma.value*1;
+		}else{
+			if (beforeComma.value!=0) opts.beforeComma = beforeComma.value*1;
+			if (afterComma.value!=0) opts.afterComma = afterComma.value*1;
+		}
+		if (beforeColon.value!=0 && beforeColon.value==afterColon.value){
+			opts.aroundColon = beforeColon.value*1;
+		}else{
+			if (beforeColon.value!=0) opts.beforeColon = beforeColon.value*1;
+			if (afterColon.value!=0) opts.afterColon = afterColon.value*1;
+		}
+	}
+
+	function repeat(str,times){ // http://stackoverflow.com/a/17800645/405017
+		var result = '';
+		while(true){
+			if (times & 1) result += str;
+			times >>= 1;
+			if (times) str += str;
+			else break;
+		}
+		return result;
+	}
+
+	function isEmpty(obj){
+		for (var k in obj) return false;
+		return true;
+	}
+</script>
+</body></html>
