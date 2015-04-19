@@ -23,8 +23,8 @@ TESTS = [
 	{value:4.204, tests:[{json:"4.20", opts:{decimals:2}}]},
 	{value:-1.9,  tests:[{json:"-2",   opts:{decimals:0}}]},
 	{value:-2.4,  tests:[{json:"-2",   opts:{decimals:0}}]},
-	{value:1e23,  tests:[{json:"1.0e+23"}]},
-	{value:1e-9,  tests:[{json:"1.0e-09"}]},
+	{value:1e23,  tests:[{json:/1(?:\.0+)?e\+23/i}]},
+	{value:1e-9,  tests:[{json:/1(?:\.0+)?e-0*9/i}]},
 	{value:-2.4,  tests:[{json:"-2",   opts:{decimals:0}}]},
 
 	{value:"foo",       tests:[{json:"\"foo\""}]},
@@ -102,7 +102,7 @@ TESTS = [
 		{ json:"{\n  \"a\":1,\n  \"b\":[\n    2,\n    3,\n    4\n  ],\n  \"c\":3\n}", opts:{wrap:true} }
 	]},
 
-	{value:{hooo:42,whee:%w[yaaa oooo booy],zoop:"whoop"}, tests:[
+	{value:{hooo:42,whee:['yaaa','oooo','booy'],zoop:"whoop"}, tests:[
 		{ json:"{\"hooo\":42,\n \"whee\":[\"yaaa\",\n         \"oooo\",\n         \"booy\"],\n \"zoop\":\"whoop\"}", opts:{wrap:20,short:true} }
 	]},
 
