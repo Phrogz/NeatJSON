@@ -2,7 +2,7 @@
 require 'date'
 Gem::Specification.new do |s|
 	s.name          = "neatjson"
-	s.version       = "0.3.4"
+	s.version       = "0.4"
 	s.date          = Date.today.iso8601
 	s.authors       = ["Gavin Kistner"]
 	s.email         = "gavin@phrogz.net"
@@ -12,6 +12,6 @@ Gem::Specification.new do |s|
 	s.license       = "MIT license (MIT)"
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
-  s.files         = Dir.glob("{lib,test}/**/*") + ['LICENSE.txt', 'README.md', '.yardopts', __FILE__]
+  s.files         = Dir.glob("{lib,test,html}/**/*") + ['LICENSE.txt', 'README.md', '.yardopts', __FILE__]
 	s.has_rdoc      = 'yard'
 end
