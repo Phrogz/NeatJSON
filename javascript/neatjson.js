@@ -1,3 +1,6 @@
+(function(exports){
+exports.neatJSON = neatJSON;
+
 function neatJSON(value,opts){
 	opts = opts || {}
 	if (!('wrap'          in opts)) opts.wrap = 80;
@@ -22,7 +25,8 @@ function neatJSON(value,opts){
 		else{
 			switch(o.constructor){
 				case Number:
-					return indent + (('decimals' in opts) ? o.toFixed(opts.decimals) : (o+''));
+					var isFloat = (o === +o && o !== (o|0));
+					return indent + ((isFloat && ('decimals' in opts)) ? o.toFixed(opts.decimals) : (o+''));
 
 				case Array:
 					var pieces  = o.map(function(v){ return build(v,'') });
@@ -104,3 +108,6 @@ function neatJSON(value,opts){
 		return (str + pad).substring(0, pad.length);
 	}
 }
+neatJSON.version = "0.5";
+
+})(typeof exports === 'undefined' ? this : exports);
