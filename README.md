@@ -134,8 +134,12 @@ You may pass any of the following option symbols to `neat_generate`:
 * `:before_comma`   — Number of spaces to put before commas (for both arrays and objects). Default: `0`
 * `:after_comma`    — Number of spaces to put after commas (for both arrays and objects). Default: `0`
 * `:around_comma`   — Shorthand to set both `:before_comma` and `:after_comma`. Default: `0`
-* `:before_colon`   — Number of spaces to put before colons. Default: `0`
-* `:after_colon`    — Number of spaces to put after colons. Default: `0`
+* `:before_colon_1` — Number of spaces before a colon when the object is on one line. Default: `0`
+* `:after_colon_1`  — Number of spaces after a colon when the object is on one line. Default: `0`
+* `:before_colon_n` — Number of spaces before a colon when the object is on multiple lines. Default: `0`
+* `:after_colon_n`  — Number of spaces after a colon when the object is on multiple lines. Default: `0`
+* `:before_colon`   — Shorthand to set both `:before_colon_1` and `:before_colon_n`. Default: `0`
+* `:after_colon`    — Shorthand to set both `:after_colon_1` and `:after_colon_n`. Default: `0`
 * `:around_colon`   — Shorthand to set both `:before_colon` and `:after_colon`. Default: `0`
 
 
@@ -151,12 +155,14 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 ## TODO (aka Known Limitations)
 
 * Figure out the best way to play with custom objects that use `to_json` for their representation.
-* Option for `around_colon` to only apply to multi-line objects.
 * Detect circular references.
 * Possibly allow illegal JSON values like `NaN` or `Infinity`.
 * Possibly allow "JSON5" output (legal identifiers unquoted, etc.)
 
 ## HISTORY
+
+* **v0.6** - April 26th, 2015
+  * Added `before_colon_1` and `before_colon_n` to distinguish between single-line and multi-line objects.
 
 * **v0.5** - April 19th, 2015
   * Do not format integers (or floats that equal their integer) using `decimals` option.
