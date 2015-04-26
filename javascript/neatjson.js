@@ -8,15 +8,20 @@ function neatJSON(value,opts){
 	if (!('indent'        in opts)) opts.indent = '  ';
 	if (!('arrayPadding'  in opts)) opts.arrayPadding  = ('padding' in opts) ? opts.padding : 0;
 	if (!('objectPadding' in opts)) opts.objectPadding = ('padding' in opts) ? opts.padding : 0;
-	if (!('afterComma'    in opts)) opts.afterComma    = ('aroundComma' in opts) ? opts.aroundComma : 0;
 	if (!('beforeComma'   in opts)) opts.beforeComma   = ('aroundComma' in opts) ? opts.aroundComma : 0;
-	if (!('afterColon'    in opts)) opts.afterColon    = ('aroundColon' in opts) ? opts.aroundColon : 0;
+	if (!('afterComma'    in opts)) opts.afterComma    = ('aroundComma' in opts) ? opts.aroundComma : 0;
 	if (!('beforeColon'   in opts)) opts.beforeColon   = ('aroundColon' in opts) ? opts.aroundColon : 0;
+	if (!('afterColon'    in opts)) opts.afterColon    = ('aroundColon' in opts) ? opts.aroundColon : 0;
+	if (!('beforeColon1'  in opts)) opts.beforeColon1  = ('aroundColon1' in opts) ? opts.aroundColon1 : ('beforeColon' in opts) ? opts.beforeColon : 0;
+	if (!('afterColon1'   in opts)) opts.afterColon1   = ('aroundColon1' in opts) ? opts.aroundColon1 : ('afterColon'  in opts) ? opts.afterColon  : 0;
+	if (!('beforeColonN'  in opts)) opts.beforeColonN  = ('aroundColonN' in opts) ? opts.aroundColonN : ('beforeColon' in opts) ? opts.beforeColon : 0;
+	if (!('afterColonN'   in opts)) opts.afterColonN   = ('aroundColonN' in opts) ? opts.aroundColonN : ('afterColon'  in opts) ? opts.afterColon  : 0;
 
-	var apad  = repeat(' ',opts.arrayPadding),
-	    opad  = repeat(' ',opts.objectPadding),
-	    comma = repeat(' ',opts.beforeComma)+','+repeat(' ',opts.afterComma),
-	    colon = repeat(' ',opts.beforeColon)+':'+repeat(' ',opts.afterColon);
+	var apad   = repeat(' ',opts.arrayPadding),
+	    opad   = repeat(' ',opts.objectPadding),
+	    comma  = repeat(' ',opts.beforeComma)+','+repeat(' ',opts.afterComma),
+	    colon1 = repeat(' ',opts.beforeColon1)+':'+repeat(' ',opts.afterColon1),
+	    colonN = repeat(' ',opts.beforeColonN)+':'+repeat(' ',opts.afterColonN);
 
 	return build(value,'');
 
@@ -47,7 +52,7 @@ function neatJSON(value,opts){
 					var keyvals=[],i=0;
 					for (var k in o) keyvals[i++] = [JSON.stringify(k), build(o[k],'')];
 					if (opts.sorted) keyvals = keyvals.sort(function(kv1,kv2){ kv1=kv1[0]; kv2=kv2[0]; return kv1<kv2?-1:kv1>kv2?1:0 });
-					keyvals = keyvals.map(function(kv){ return kv.join(colon) }).join(comma);
+					keyvals = keyvals.map(function(kv){ return kv.join(colon1) }).join(comma);
 					var oneLine = indent+"{"+opad+keyvals+opad+"}";
 					if (opts.wrap===false || oneLine.length<opts.wrap) return oneLine;
 					if (opts.short){
@@ -63,9 +68,9 @@ function neatJSON(value,opts){
 						}
 						for (var i=keyvals.length;i--;){
 							var k=keyvals[i][0], v=keyvals[i][1];
-							var indent2 = repeat(' ',(k+colon).length);
-							var oneLine = k+colon+build(v,'');
-							keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colon+build(v,indent2).replace(/^\s+/,''));
+							var indent2 = repeat(' ',(k+colonN).length);
+							var oneLine = k+colonN+build(v,'');
+							keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colonN+build(v,indent2).replace(/^\s+/,''));
 						}
 						return keyvals.join(',\n') + opad + '}';
 					}else{
@@ -81,8 +86,8 @@ function neatJSON(value,opts){
 						var indent2 = indent+opts.indent;
 						for (var i=keyvals.length;i--;){
 							var k=keyvals[i][0], v=keyvals[i][1];
-							var oneLine = k+colon+build(v,'');
-							keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colon+build(v,indent2).replace(/^\s+/,''));
+							var oneLine = k+colonN+build(v,'');
+							keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colonN+build(v,indent2).replace(/^\s+/,''));
 						}
 						return indent+'{\n'+keyvals.join(',\n')+'\n'+indent+'}'
 					}
@@ -107,6 +112,6 @@ function neatJSON(value,opts){
 		return (str + pad).substring(0, pad.length);
 	}
 }
-neatJSON.version = "0.5";
+neatJSON.version = "0.6";
 
 })(typeof exports === 'undefined' ? this : exports);

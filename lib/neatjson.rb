@@ -21,6 +21,12 @@ module JSON
 	# @option opts [Integer] :around_colon   (0) Number of spaces to put before/after colons (for objects).
 	# @option opts [Integer] :before_colon   (0) Number of spaces to put before colons (for objects).
 	# @option opts [Integer] :after_colon    (0) Number of spaces to put after colons (for objects).
+	# @option opts [Integer] :around_colon_1 (0) Number of spaces to put before/after colons for single-line objects.
+	# @option opts [Integer] :before_colon_1 (0) Number of spaces to put before colons for single-line objects.
+	# @option opts [Integer] :after_colon_1  (0) Number of spaces to put after colons for single-line objects.
+	# @option opts [Integer] :around_colon_n (0) Number of spaces to put before/after colons for multi-line objects.
+	# @option opts [Integer] :before_colon_n (0) Number of spaces to put before colons for multi-line objects.
+	# @option opts [Integer] :after_colon_n  (0) Number of spaces to put after colons for multi-line objects.
 	# @return [String] the JSON representation of the object.
 	def self.neat_generate(object,opts={})
 		opts[:wrap] = 80 unless opts.key?(:wrap)
@@ -32,12 +38,17 @@ module JSON
 		opts[:before_comma]   ||= opts[:around_comma] || 0
 		opts[:before_colon]   ||= opts[:around_colon] || 0
 		opts[:after_colon]    ||= opts[:around_colon] || 0
+		opts[:before_colon_1] ||= opts[:around_colon_1] || opts[:before_colon] || 0
+		opts[:after_colon_1]  ||= opts[:around_colon_1] || opts[:after_colon]  || 0
+		opts[:before_colon_n] ||= opts[:around_colon_n] || opts[:before_colon] || 0
+		opts[:after_colon_n]  ||= opts[:around_colon_n] || opts[:after_colon]  || 0
 		raise ":indent option must only be whitespace" if opts[:indent]=~/\S/
 
 		apad  = " " * opts[:array_padding]
 		opad  = " " * opts[:object_padding]
 		comma = "#{' '*opts[:before_comma]},#{' '*opts[:after_comma]}"
-		colon = "#{' '*opts[:before_colon]}:#{' '*opts[:after_colon]}"
+		colon1= "#{' '*opts[:before_colon_1]}:#{' '*opts[:after_colon_1]}"
+		colonn= "#{' '*opts[:before_colon_n]}:#{' '*opts[:after_colon_n]}"
 
 		build = ->(o,indent) do
 			case o
@@ -73,7 +84,7 @@ module JSON
 				when Hash
 					keyvals = o.map{ |k,v| [ k.to_s.inspect, build[v,''] ] }
 					keyvals = keyvals.sort_by(&:first) if opts[:sorted]
-					keyvals = keyvals.map{ |kv| kv.join(colon) }.join(comma)
+					keyvals = keyvals.map{ |kv| kv.join(colon1) }.join(comma)
 					one_line = "#{indent}{#{opad}#{keyvals}#{opad}}"
 					if !opts[:wrap] || (one_line.length <= opts[:wrap])
 						one_line
@@ -87,10 +98,10 @@ module JSON
 								keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
 							end
 							keyvals.map! do |k,v|
-								indent2 = " "*"#{k}#{colon}".length
-								one_line = "#{k}#{colon}#{build[v,'']}"
+								indent2 = " "*"#{k}#{colonn}".length
+								one_line = "#{k}#{colonn}#{build[v,'']}"
 								if opts[:wrap] && (one_line.length > opts[:wrap]) && (v.is_a?(Array) || v.is_a?(Hash))
-									"#{k}#{colon}#{build[v,indent2].lstrip}"
+									"#{k}#{colonn}#{build[v,indent2].lstrip}"
 								else
 									one_line
 								end
@@ -105,9 +116,9 @@ module JSON
 							end
 							indent2 = "#{indent}#{opts[:indent]}"
 							keyvals.map! do |k,v|
-								one_line = "#{k}#{colon}#{build[v,'']}"
+								one_line = "#{k}#{colonn}#{build[v,'']}"
 								if opts[:wrap] && (one_line.length > opts[:wrap]) && (v.is_a?(Array) || v.is_a?(Hash))
-									"#{k}#{colon}#{build[v,indent2].lstrip}"
+									"#{k}#{colonn}#{build[v,indent2].lstrip}"
 								else
 									one_line
 								end

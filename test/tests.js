@@ -67,7 +67,16 @@ exports.tests = [
 		{ json:'{ "a" : 2, "b" : 1 }',       opts:{sorted:true,aroundColon:1,afterComma:1,objectPadding:1} },
 		{ json:'{"a" : 2, "b" : 1}',         opts:{sorted:true,beforeColon:1,afterColon:1,afterComma:1,arrayPadding:1} },
 		{ json:'{  "a"  :  2, "b"  :  1  }', opts:{sorted:true,aroundColon:2,afterComma:1,padding:2} },
-		{ json:'{  "a":2, "b":1  }',         opts:{sorted:true,afterComma:1,padding:2} }
+		{ json:'{  "a":2, "b":1  }',         opts:{sorted:true,afterComma:1,padding:2} },
+		{ json:'{"b":  1,"a":  2}',               opts:{afterColon1:2} },
+		{ json:'{"b"  :  1,"a"  :  2}',           opts:{aroundColon1:2} },
+		{ json:"{\n  \"b\":1,\n  \"a\":2\n}",     opts:{wrap:true,aroundColon1:2} },
+		{ json:"{\n  \"b\": 1,\n  \"a\": 2\n}",   opts:{wrap:true,afterColon:1} },
+		{ json:"{\n  \"b\": 1,\n  \"a\": 2\n}",   opts:{wrap:true,afterColonN:1} },
+		{ json:"{\"b\":1,\n \"a\":2}",            opts:{wrap:true,short:true} },
+		{ json:"{\"b\": 1,\n \"a\": 2}",          opts:{wrap:true,short:true,afterColon:1} },
+		{ json:"{\"b\": 1,\n \"a\": 2}",          opts:{wrap:true,short:true,afterColonN:1} },
+		{ json:"{\"b\":1,\n \"a\":2}",            opts:{wrap:true,short:true,afterColon1:1} }
 	]},
 
 	{value:{b:1,aaa:2,cc:3}, tests:[
