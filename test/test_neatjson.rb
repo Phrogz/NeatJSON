@@ -7,15 +7,17 @@ count = 0
 TESTS.each do |value_tests|
 	val, tests = value_tests[:value], value_tests[:tests]
 	tests.each do |test|
+		cmd = test[:opts] ? "JSON.neat_generate(#{val.inspect},#{test[:opts].inspect})" : "JSON.neat_generate(#{val.inspect})"
 		begin
-			count += 1
 			json = test[:opts] ? JSON.neat_generate(val,test[:opts].dup) : JSON.neat_generate(val)
-			mesg = test[:opts] ? "JSON.neat_generate(#{val.inspect},#{test[:opts].inspect})" : "JSON.neat_generate(#{val.inspect})"
-			raise "#{mesg}\nEXPECTED:\n#{test[:json]}\nACTUAL:\n#{json}\n\n" unless test[:json]===json
+			raise "EXPECTED:\n#{test[:json]}\nACTUAL:\n#{json}" unless test[:json]===json
 			pass += 1
 		rescue StandardError => e
+			puts "Error running #{cmd}"
 			puts e
 		end
+		puts ""
+		count += 1
 	end
 end
 elapsed = Time.now-start
