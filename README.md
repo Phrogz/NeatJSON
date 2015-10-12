@@ -161,6 +161,10 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **v0.6.1** - October 12th, 2015
+  * Fix handling of nested empty objects and arrays. (Would cause a runtime error in many cases.)
+    * _This change causes empty arrays in a tight wrapping scenario to appear on a single line where they would previously take up three lines._
+
 * **v0.6** - April 26th, 2015
   * Added `before_colon_1` and `before_colon_n` to distinguish between single-line and multi-line objects.
 

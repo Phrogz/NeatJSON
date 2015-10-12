@@ -129,7 +129,7 @@ exports.tests = [
 	{value:{"foo":{}}, tests:[
 		{ json:'{"foo":{}}' },
 		{ json:'{"foo":{}}',        opts:{wrap:false} },
-		{ json:'{\n  "foo":{}\n}',  opts:{wrap:10}    },
+		{ json:'{\n  "foo":{}\n}',  opts:{wrap:5}    },
 		{ json:'{"foo":{}}',        opts:{wrap:1, short:true} }
 	]},
 

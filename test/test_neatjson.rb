@@ -13,12 +13,11 @@ TESTS.each do |value_tests|
 			raise "EXPECTED:\n#{test[:json]}\nACTUAL:\n#{json}" unless test[:json]===json
 			pass += 1
 		rescue StandardError => e
-			puts "Error running #{cmd}"
-			puts e
+			puts "Error running #{cmd}", e, ""
 		end
-		puts ""
 		count += 1
 	end
 end
 elapsed = Time.now-start
+elapsed = 0.0001 if elapsed==0
 puts "%d/%d test#{:s if count!=1} passed in %.2fms (%d tests per second)" % [pass, count, elapsed*1000, count/elapsed]
