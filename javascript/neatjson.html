@@ -97,7 +97,7 @@
 				for (var k in opts) parts.push('<b>'+k+'</b>:'+JSON.stringify(opts[k]));
 				code.innerHTML = "var json = neatJSON(obj,{ "+parts.join(', ')+" });";
 			}
-			out.innerHTML = neatJSON(JSON.parse(inp.value),opts);
+			out.innerHTML = neatJSON(JSON.parse(inp.value),opts).replace(/</g,'&lt;').replace(/>/g,'&gt;');
 		}catch(e){
 			out.innerHTML = e;
 		}
