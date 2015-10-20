@@ -115,6 +115,6 @@ function neatJSON(value,opts){
 		return (str + pad).substring(0, pad.length);
 	}
 }
-neatJSON.version = "0.6";
+neatJSON.version = "0.6.1";
 
 })(typeof exports === 'undefined' ? this : exports);
