@@ -50,8 +50,9 @@ module JSON
 		colon1= "#{' '*opts[:before_colon_1]}:#{' '*opts[:after_colon_1]}"
 		colonn= "#{' '*opts[:before_colon_n]}:#{' '*opts[:after_colon_n]}"
 
+		memoizer = {}
 		build = ->(o,indent) do
-			case o
+			memoizer[[o,indent]] ||= case o
 				when String,Integer       then "#{indent}#{o.inspect}"
 				when Symbol               then "#{indent}#{o.to_s.inspect}"
 				when TrueClass,FalseClass then "#{indent}#{o}"
