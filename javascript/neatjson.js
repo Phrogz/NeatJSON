@@ -23,9 +23,21 @@ function neatJSON(value,opts){
 	    colon1 = repeat(' ',opts.beforeColon1)+':'+repeat(' ',opts.afterColon1),
 	    colonN = repeat(' ',opts.beforeColonN)+':'+repeat(' ',opts.afterColonN);
 
+	var build = memoize(rawBuild);
 	return build(value,'');
 
-	function build(o,indent){
+	function memoize(f){
+		var memo  = {};
+		var slice = Array.prototype.slice;
+		return function(){
+			var args = slice.call(arguments);
+			var mkey = JSON.stringify(args);
+			if (!(mkey in memo)) memo[mkey] = f.apply(this,args);
+			return memo[mkey];
+		}
+	}
+
+	function rawBuild(o,indent){
 		if (o===null || o===undefined) return indent+'null';
 		else{
 			switch(o.constructor){
@@ -94,7 +106,6 @@ function neatJSON(value,opts){
 						return indent+'{\n'+keyvals.join(',\n')+'\n'+indent+'}'
 					}
 
-
 				default:
 					return indent+JSON.stringify(o);
 			}
@@ -111,6 +122,7 @@ function neatJSON(value,opts){
 		}
 		return result;
 	}
+
 	function padRight(pad, str){
 		return (str + pad).substring(0, pad.length);
 	}

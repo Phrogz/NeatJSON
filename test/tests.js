@@ -145,6 +145,12 @@ exports.tests = [
 
 	{value:["foo",[{},[{"foo":[]},42]],"bar"], tests:[
 		{ json:'["foo",\n [{},\n  [{"foo":[]},\n   42]],\n "bar"]',  opts:{wrap:1, short:true} },
+	]},
+
+	{value:{a:{b:{c:{d:{e:{f:{g:{h:{i:{j:{k:{l:{m:1}}}}}}}}}}}}}, tests:[
+		{ json:'{"a":{"b":{"c":{"d":{"e":{"f":{"g":{"h":{"i":{"j":{"k":{"l":{"m":1}}}}}}}}}}}}}', opts:{wrap:false} },
+		{ json:'{"a":{"b":{"c":{"d":{"e":{"f":{"g":{"h":{"i":{"j":{"k":{"l":{"m":1}}}}}}}}}}}}}', opts:{wrap:1,short:true} },
+		{ json:"{\n  \"a\":{\n    \"b\":{\n      \"c\":{\n        \"d\":{\n          \"e\":{\n            \"f\":{\n              \"g\":{\n                \"h\":{\n                  \"i\":{\n                    \"j\":{\n                      \"k\":{\n                        \"l\":{\n                          \"m\":1\n                        }\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}", opts:{wrap:1} },
 	]}
 
 	// {value:Class.new{ def to_json(*a); {a:1}.to_json(*a); end }.new, tests:[
