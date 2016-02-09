@@ -161,6 +161,10 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **v0.6.2** - February 8th, 2016
+  * Use memoization to avoid performance stalls when wrapping deeply-nested objects/arrays.  
+    _Thanks @chroche_
+
 * **v0.6.1** - October 12th, 2015
   * Fix handling of nested empty objects and arrays. (Would cause a runtime error in many cases.)
     * _This change causes empty arrays in a tight wrapping scenario to appear on a single line where they would previously take up three lines._
