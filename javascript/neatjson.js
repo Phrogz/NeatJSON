@@ -23,17 +23,17 @@ function neatJSON(value,opts){
 	    colon1 = repeat(' ',opts.beforeColon1)+':'+repeat(' ',opts.afterColon1),
 	    colonN = repeat(' ',opts.beforeColonN)+':'+repeat(' ',opts.afterColonN);
 
-	var build = memoize(rawBuild);
+	var build = memoize();
 	return build(value,'');
 
-	function memoize(f){
-		var memo  = {};
-		var slice = Array.prototype.slice;
-		return function(){
-			var args = slice.call(arguments);
-			var mkey = JSON.stringify(args);
-			if (!(mkey in memo)) memo[mkey] = f.apply(this,args);
-			return memo[mkey];
+	function memoize(){
+		var memo = new Map;
+		return function(o,indent){
+			var result;
+			var byIndent=memo.get(o);
+			if (!byIndent) memo.set(o,byIndent={});
+			if (!byIndent[indent]) byIndent[indent] = rawBuild(o,indent);
+			return byIndent[indent];
 		}
 	}
 
