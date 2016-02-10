@@ -29,7 +29,6 @@ function neatJSON(value,opts){
 	function memoize(){
 		var memo = new Map;
 		return function(o,indent){
-			var result;
 			var byIndent=memo.get(o);
 			if (!byIndent) memo.set(o,byIndent={});
 			if (!byIndent[indent]) byIndent[indent] = rawBuild(o,indent);
