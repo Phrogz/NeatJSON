@@ -110,7 +110,7 @@
 		document.querySelector('#wrapopts1').style.visibility = wrap.checked ? '' : 'hidden';
 		document.querySelector('#wrapopts2').style.visibility = wrap.checked ? '' : 'hidden';
 		document.querySelector('#wrapopts3').style.visibility = wrap.checked ? '' : 'hidden';
-		document.querySelector('#wrapopts4').style.visibility = wrap.checked ? '' : 'hidden';
+		document.querySelector('#wrapopts4').style.visibility = wrap.checked ? (shrt.checked ? 'hidden' : '') : 'hidden';
 
 		if (indN.value!=2 && (wrap.checked && !shrt.checked)) opts.indent = repeat(' ',indN.value*1);
 
