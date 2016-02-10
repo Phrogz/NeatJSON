@@ -16,6 +16,7 @@
 		.option { display:inline-block; margin-right:2em; user-select:none; -webkit-user-select:none; }
 		input[type="range"] { width:7em }
 		b { background:yellow }
+		i { opacity:0.4; font-style:normal }
 	</style>
 </head><body>
 <h1>NeatJSON Online</h1>
@@ -87,17 +88,26 @@
 	window.onload = neaten;
 	inp.addEventListener('input',neaten,false);
 
+	var lastInput,lastCommand,commandText;
 	function neaten(){
 		try{
 			changeOptions();
-			if (isEmpty(opts)){
-				code.innerHTML = "var json = neatJSON(obj);";
-			}else{
+			if (isEmpty(opts)) commandText = "neatJSON(obj)";
+			else{
 				var parts=[];
-				for (var k in opts) parts.push('<b>'+k+'</b>:'+JSON.stringify(opts[k]));
-				code.innerHTML = "var json = neatJSON(obj,{ "+parts.join(', ')+" });";
+				for (var k in opts) parts.push('<b>'+k+'<\/b>:'+JSON.stringify(opts[k]));
+				commandText = "neatJSON(obj,{ "+parts.join(', ')+" })";
 			}
-			out.innerHTML = neatJSON(JSON.parse(inp.value),opts).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			if (commandText==lastCommand && inp.value==lastInput) return;
+			lastCommand = commandText;
+			lastInput   = inp.value;
+
+			var obj = JSON.parse(inp.value);
+			var start = new Date;
+			out.innerHTML = neatJSON(obj,opts).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			var elapsed = new Date-start;
+			console.log(commandText.replace(/<\/?b>/g,'')+" took "+elapsed+"ms");
+			code.innerHTML = "var json = "+commandText+"; <i>// took ~"+elapsed+"ms<\/i>";
 		}catch(e){
 			out.innerHTML = e;
 		}
