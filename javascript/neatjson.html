@@ -96,7 +96,9 @@
 			else{
 				var parts=[];
 				for (var k in opts) parts.push('<b>'+k+'<\/b>:'+JSON.stringify(opts[k]));
-				commandText = "neatJSON(obj,{ "+parts.join(', ')+" })";
+				optionsString = "{ "+parts.join(', ')+" })"
+				commandText = "neatJSON(obj, " + optionsString;
+				commandTextRuby = "JSON.neat_generate(obj, "+ optionsString.replace( /([a-z])([A-Z0-9])/g, "$1_$2").toLowerCase();
 			}
 			if (commandText==lastCommand && inp.value==lastInput) return;
 			lastCommand = commandText;
@@ -107,7 +109,9 @@
 			out.innerHTML = neatJSON(obj,opts).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 			var elapsed = new Date-start;
 			console.log(commandText.replace(/<\/?b>/g,'')+" took "+elapsed+"ms");
-			code.innerHTML = "var json = "+commandText+"; <i>// took ~"+elapsed+"ms<\/i>";
+
+			code.innerHTML = "var json = "+commandText+"; <i>// took ~"+elapsed+"ms<\/i>" +
+					         "<br/>json = " + commandTextRuby + " <i># took ~"+elapsed+"ms<\/i>";
 		}catch(e){
 			out.innerHTML = e;
 		}
