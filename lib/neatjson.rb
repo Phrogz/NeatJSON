@@ -99,7 +99,7 @@ module JSON
 							keyvals[0][0].sub! "#{indent} ", "#{indent}{"
 							if opts[:aligned]
 								longest = keyvals.map(&:first).map(&:length).max
-								keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
+                keyvals = keyvals.map{|k, v| ["%-#{longest}s" % k, v] }
 							end
 							keyvals.map! do |k,v|
 								indent2 = " "*"#{k}#{colonn}".length
@@ -116,7 +116,7 @@ module JSON
 							keyvals = keyvals.sort_by(&:first) if opts[:sorted]
 							if opts[:aligned]
 								longest = keyvals.map(&:first).map(&:length).max
-								keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
+                keyvals = keyvals.map{|k, v| ["%-#{longest}s" % k, v] }
 							end
 							indent2 = "#{indent}#{opts[:indent]}"
 							keyvals.map! do |k,v|
