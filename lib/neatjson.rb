@@ -68,10 +68,11 @@ module JSON
 					end
 
 				when Array
-					return "#{indent}[]" if o.empty?
 					pieces = o.map{ |v| build[v,''] }
 					one_line = "#{indent}[#{apad}#{pieces.join comma}#{apad}]"
-					if !opts[:wrap] || (one_line.length <= opts[:wrap])
+					if o.empty?
+						"#{indent}[]"
+					elsif !opts[:wrap] || (one_line.length <= opts[:wrap])
 						one_line
 					elsif opts[:short]
 						indent2 = "#{indent} #{apad}"
@@ -85,12 +86,13 @@ module JSON
 					end
 
 				when Hash
-					return "#{indent}{}" if o.empty?
 					keyvals = o.map{ |k,v| [ k.to_s.inspect, build[v,''] ] }
 					keyvals = keyvals.sort_by(&:first) if opts[:sorted]
 					keyvals = keyvals.map{ |kv| kv.join(colon1) }.join(comma)
 					one_line = "#{indent}{#{opad}#{keyvals}#{opad}}"
-					if !opts[:wrap] || (one_line.length <= opts[:wrap])
+					if o.empty?
+						"#{indent}{}"
+					elsif !opts[:wrap] || (one_line.length <= opts[:wrap])
 						one_line
 					else
 						if opts[:short]
