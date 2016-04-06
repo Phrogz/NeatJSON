@@ -68,66 +68,72 @@ module JSON
 					end
 
 				when Array
-					return "#{indent}[]" if o.empty?
-					pieces = o.map{ |v| build[v,''] }
-					one_line = "#{indent}[#{apad}#{pieces.join comma}#{apad}]"
-					if !opts[:wrap] || (one_line.length <= opts[:wrap])
-						one_line
-					elsif opts[:short]
-						indent2 = "#{indent} #{apad}"
-						pieces = o.map{ |v| build[ v,indent2 ] }
-						pieces[0].sub! indent2, "#{indent}[#{apad}"
-						pieces.last << apad << "]"
-						pieces.join ",\n"
+					if o.empty?
+						"#{indent}[]"
 					else
-						indent2 = "#{indent}#{opts[:indent]}"
-						"#{indent}[\n#{o.map{ |v| build[ v, indent2 ] }.join ",\n"}\n#{opts[:indent_last] ? indent2 : indent}]"
+						pieces = o.map{ |v| build[v,''] }
+						one_line = "#{indent}[#{apad}#{pieces.join comma}#{apad}]"
+						if !opts[:wrap] || (one_line.length <= opts[:wrap])
+							one_line
+						elsif opts[:short]
+							indent2 = "#{indent} #{apad}"
+							pieces = o.map{ |v| build[ v,indent2 ] }
+							pieces[0].sub! indent2, "#{indent}[#{apad}"
+							pieces.last << apad << "]"
+							pieces.join ",\n"
+						else
+							indent2 = "#{indent}#{opts[:indent]}"
+							"#{indent}[\n#{o.map{ |v| build[ v, indent2 ] }.join ",\n"}\n#{opts[:indent_last] ? indent2 : indent}]"
+						end
 					end
 
 				when Hash
-					return "#{indent}{}" if o.empty?
-					keyvals = o.map{ |k,v| [ k.to_s.inspect, build[v,''] ] }
-					keyvals = keyvals.sort_by(&:first) if opts[:sorted]
-					keyvals = keyvals.map{ |kv| kv.join(colon1) }.join(comma)
-					one_line = "#{indent}{#{opad}#{keyvals}#{opad}}"
-					if !opts[:wrap] || (one_line.length <= opts[:wrap])
-						one_line
+					if o.empty?
+						"#{indent}{}"
 					else
-						if opts[:short]
-							keyvals = o.map{ |k,v| ["#{indent} #{opad}#{k.to_s.inspect}",v] }
-							keyvals = keyvals.sort_by(&:first) if opts[:sorted]
-							keyvals[0][0].sub! "#{indent} ", "#{indent}{"
-							if opts[:aligned]
-								longest = keyvals.map(&:first).map(&:length).max
-								keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
-							end
-							keyvals.map! do |k,v|
-								indent2 = " "*"#{k}#{colonn}".length
-								one_line = "#{k}#{colonn}#{build[v,'']}"
-								if opts[:wrap] && (one_line.length > opts[:wrap]) && (v.is_a?(Array) || v.is_a?(Hash))
-									"#{k}#{colonn}#{build[v,indent2].lstrip}"
-								else
-									one_line
-								end
-							end
-							keyvals.join(",\n") << opad << "}"
+						keyvals = o.map{ |k,v| [ k.to_s.inspect, build[v,''] ] }
+						keyvals = keyvals.sort_by(&:first) if opts[:sorted]
+						keyvals = keyvals.map{ |kv| kv.join(colon1) }.join(comma)
+						one_line = "#{indent}{#{opad}#{keyvals}#{opad}}"
+						if !opts[:wrap] || (one_line.length <= opts[:wrap])
+							one_line
 						else
-							keyvals = o.map{ |k,v| ["#{indent}#{opts[:indent]}#{k.to_s.inspect}",v] }
-							keyvals = keyvals.sort_by(&:first) if opts[:sorted]
-							if opts[:aligned]
-								longest = keyvals.map(&:first).map(&:length).max
-								keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
-							end
-							indent2 = "#{indent}#{opts[:indent]}"
-							keyvals.map! do |k,v|
-								one_line = "#{k}#{colonn}#{build[v,'']}"
-								if opts[:wrap] && (one_line.length > opts[:wrap]) && (v.is_a?(Array) || v.is_a?(Hash))
-									"#{k}#{colonn}#{build[v,indent2].lstrip}"
-								else
-									one_line
+							if opts[:short]
+								keyvals = o.map{ |k,v| ["#{indent} #{opad}#{k.to_s.inspect}",v] }
+								keyvals = keyvals.sort_by(&:first) if opts[:sorted]
+								keyvals[0][0].sub! "#{indent} ", "#{indent}{"
+								if opts[:aligned]
+									longest = keyvals.map(&:first).map(&:length).max
+									keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
 								end
+								keyvals.map! do |k,v|
+									indent2 = " "*"#{k}#{colonn}".length
+									one_line = "#{k}#{colonn}#{build[v,'']}"
+									if opts[:wrap] && (one_line.length > opts[:wrap]) && (v.is_a?(Array) || v.is_a?(Hash))
+										"#{k}#{colonn}#{build[v,indent2].lstrip}"
+									else
+										one_line
+									end
+								end
+								keyvals.join(",\n") << opad << "}"
+							else
+								keyvals = o.map{ |k,v| ["#{indent}#{opts[:indent]}#{k.to_s.inspect}",v] }
+								keyvals = keyvals.sort_by(&:first) if opts[:sorted]
+								if opts[:aligned]
+									longest = keyvals.map(&:first).map(&:length).max
+									keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
+								end
+								indent2 = "#{indent}#{opts[:indent]}"
+								keyvals.map! do |k,v|
+									one_line = "#{k}#{colonn}#{build[v,'']}"
+									if opts[:wrap] && (one_line.length > opts[:wrap]) && (v.is_a?(Array) || v.is_a?(Hash))
+										"#{k}#{colonn}#{build[v,indent2].lstrip}"
+									else
+										one_line
+									end
+								end
+								"#{indent}{\n#{keyvals.join(",\n")}\n#{opts[:indent_last] ? indent2 : indent}}"
 							end
-							"#{indent}{\n#{keyvals.join(",\n")}\n#{opts[:indent_last] ? indent2 : indent}}"
 						end
 					end
 
