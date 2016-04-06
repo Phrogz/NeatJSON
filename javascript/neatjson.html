@@ -25,28 +25,28 @@
 <div id="options">
 	<div class="option-row">
 		<span class="option">
-			<label><input	type="checkbox" id="useDecimals"> Format Decimals?</label>
+			<label title="Limit the number of decimals displayed?"><input type="checkbox" id="useDecimals"> Format Decimals?</label>
 			<input type="text" id="decimals" value="3" size="3" min="0" max="10" style="visibility:hidden">
 		</span>
-		<span class="option"><label><input type="checkbox" id="sorted"> Sort Keys?</label></span>
+		<span class="option" title="Use alphabetical ordering for object keys?"><label><input type="checkbox" id="sorted"> Sort Keys?</label></span>
 		<span class="option">
-			<label><input	type="checkbox" id="wrap" checked> Wrap?</label>
+			<label title="Force line wrapping?"><input type="checkbox" id="wrap" checked> Wrap?</label>
 			<label id="wrapopts1">width <input type="text" id="wrapSize" value="40" size="3"></label>
-			<label id="wrapopts2"><input type="checkbox" id="short"> Short?</label>
-			<label id="wrapopts3"><input type="checkbox" id="aligned"> Align Keys?</label>
+			<label id="wrapopts2" title="Put opening/closing brackets on the same line as data?"><input type="checkbox" id="short" checked> Short?</label>
+			<label id="wrapopts3"><input type="checkbox" id="aligned" checked> Align Keys?</label>
 			<label id="wrapopts4">Indent Spaces <input type="range" id="indent" value="2" min="0" max="7" step="1"></label>
 			<label id="wrapopts5" title="Indent the closing bracket/brace for arrays and objects?"><input type="checkbox" id="indentlast"> Indent Last?</label>
 		</span>
 	</div><div class="option-row">
-		<span class="option" title="Number of spaces inside array brackets on a single line."><label>Array Padding<input type="range" id="arrayPadding"  value="0" min="0" max="5" step="1"></label></span>
-		<span class="option" title="Number of spaces inside object braces on a single line."><label>Object Padding<input type="range" id="objectPadding"  value="0" min="0" max="5" step="1"></label></span>
-		<span class="option" title="Number of spaces before commas (for single-line arrays and objects)."><label>Before Comma<input type="range" id="beforeComma"   value="0" min="0" max="5" step="1"></label></span>
-		<span class="option" title="Number of spaces after commas (for single-line arrays and objects)."><label>After Comma<input type="range" id="afterComma"   value="0" min="0" max="5" step="1"></label></span>
+		<span class="option" title="Number of spaces inside array brackets on a single line."><label>Array Padding  <input type="range" id="arrayPadding"  value="1" min="0" max="5" step="1"></label></span>
+		<span class="option" title="Number of spaces inside object braces on a single line." ><label>Object Padding <input type="range" id="objectPadding" value="1" min="0" max="5" step="1"></label></span>
+		<span class="option" title="Number of spaces before commas (for single-line arrays and objects)."><label>Before Comma <input type="range" id="beforeComma" value="0" min="0" max="5" step="1"></label></span>
+		<span class="option" title="Number of spaces after commas (for single-line arrays and objects)." ><label>After Comma  <input type="range" id="afterComma"  value="1" min="0" max="5" step="1"></label></span>
 	</div><div class="option-row">
-		<span class="option" title="Number of spaces before colon for single-line objects."><label>Before Colon 1<input type="range" id="beforeColon1"   value="0" min="0" max="5" step="1"></label></span>
-		<span class="option" title="Number of spaces after colon for single-line objects."><label>After Colon 1<input type="range" id="afterColon1"   value="0" min="0" max="5" step="1"></label></span>
-		<span class="option" title="Number of spaces before colon for multi-line objects."><label>Before Colon N<input type="range" id="beforeColonN"   value="0" min="0" max="5" step="1"></label></span>
-		<span class="option" title="Number of spaces after colon for multi-line objects."><label>After Colon N<input type="range" id="afterColonN"   value="0" min="0" max="5" step="1"></label></span>
+		<span class="option" title="Number of spaces before colon for single-line objects."><label>Before Colon 1 <input type="range" id="beforeColon1" value="1" min="0" max="5" step="1"></label></span>
+		<span class="option" title="Number of spaces after colon for single-line objects." ><label>After Colon 1  <input type="range" id="afterColon1"  value="1" min="0" max="5" step="1"></label></span>
+		<span class="option" title="Number of spaces before colon for multi-line objects." ><label>Before Colon N <input type="range" id="beforeColonN" value="1" min="0" max="5" step="1"></label></span>
+		<span class="option" title="Number of spaces after colon for multi-line objects."  ><label>After Colon N  <input type="range" id="afterColonN"  value="1" min="0" max="5" step="1"></label></span>
 	</div>
 </div>
 
