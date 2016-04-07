@@ -123,8 +123,9 @@ You may pass any of the following option symbols to `neat_generate`:
 
 * `:wrap`           — The maximum line width before wrapping. Use `false` to never wrap, or `true` (or `-1`) to always wrap. Default: `80`
 * `:indent`         — Whitespace used to indent each level when wrapping. Default: `"  "` (two spaces)
+* `:indent_last`    — Indent the closing bracket/brace for arrays and objects? Default: `false`
 * `:short`          — Keep the output 'short' when wrapping? This puts opening brackets on the same line as the first value, and closing brackets on the same line as the last. Default: `false`
-  * _This causes the `:indent` option to be ignored, instead basing indentation on array and object padding._
+  * _This causes the `:indent` and `:indent_last` options to be ignored, instead basing indentation on array and object padding._
 * `:sorted`         — Sort the keys for objects to be in alphabetical order? Default: `false`
 * `:aligned`        — When wrapping objects, line up the colons (per object)? Default: `false`
 * `:decimals`       — Decimal precision to use for non-integer numbers; use `false` to keep float values precise. Default: `false`

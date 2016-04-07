@@ -57,7 +57,7 @@ function neatJSON(value,opts){
 						return pieces.join(',\n');
 					}else{
 						var indent2 = indent+opts.indent;
-						return indent+'[\n'+o.map(function(v){ return build(v,indent2) }).join(',\n')+'\n'+indent+']';
+						return indent+'[\n'+o.map(function(v){ return build(v,indent2) }).join(',\n')+'\n'+(opts.indentLast?indent2:indent)+']';
 					}
 
 				case Object:
@@ -102,7 +102,7 @@ function neatJSON(value,opts){
 							var oneLine = k+colonN+build(v,'');
 							keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colonN+build(v,indent2).replace(/^\s+/,''));
 						}
-						return indent+'{\n'+keyvals.join(',\n')+'\n'+indent+'}'
+						return indent+'{\n'+keyvals.join(',\n')+'\n'+(opts.indentLast?indent2:indent)+'}'
 					}
 
 				default:
@@ -126,6 +126,6 @@ function neatJSON(value,opts){
 		return (str + pad).substring(0, pad.length);
 	}
 }
-neatJSON.version = "0.6.2";
+neatJSON.version = "0.7";
 
 })(typeof exports === 'undefined' ? this : exports);

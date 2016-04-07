@@ -4,15 +4,15 @@ TESTS = [
 	{value:nil,   tests:[{json:"null"  }]},
 	{value:5,     tests:[
 		{json:"5"},
-		{json:"5", opts:{decimals:3}}
+		{json:"5", opts:{decimals:3}},
 	]},
 	{value:5.0, tests:[
 		{json:"5"},
-		{json:"5", opts:{decimals:3}}
+		{json:"5", opts:{decimals:3}},
 	]},
 	{value:5.0001, tests:[
 		{json:"5.0001"},
-		{json:"5.000", opts:{decimals:3}}
+		{json:"5.000", opts:{decimals:3}},
 	]},
 	{value:4.2, tests:[
 		{json:"4.2"},
@@ -50,7 +50,7 @@ TESTS = [
 	{value:[1,2,3], tests:[
 		{ json:"[1,2,3]" },
 		{ json:"[1 ,2 ,3]",   opts:{before_comma:1} },
-		{ json:"[1 , 2 , 3]", opts:{around_comma:1} }
+		{ json:"[1 , 2 , 3]", opts:{around_comma:1} },
 	]},
 
 	{value:{b:1,a:2}, tests:[
@@ -81,16 +81,18 @@ TESTS = [
 		{ json:"{\n  \"b\":1,\n  \"aaa\":2,\n  \"cc\":3\n}",    opts:{wrap:true} },
 		{ json:"{\n  \"b\"  :1,\n  \"aaa\":2,\n  \"cc\" :3\n}", opts:{wrap:true,aligned:true} },
 		{ json:"{\"b\":1,\"aaa\":2,\"cc\":3}",                  opts:{aligned:true} },
-		{ json:"{\n  \"aaa\":2,\n  \"b\"  :1,\n  \"cc\" :3\n}", opts:{wrap:true,aligned:true,sorted:true} }
+		{ json:"{\n  \"aaa\":2,\n  \"b\"  :1,\n  \"cc\" :3\n}", opts:{wrap:true,aligned:true,sorted:true} },
 	]},
 
 	{value:{a:1}, tests:[
 		{ json:'{"a":1}' },
-		{ json:"{\n  \"a\":1\n}", opts:{wrap:true} }
+		{ json:"{\n  \"a\":1\n}",   opts:{wrap:true} },
+		{ json:"{\n  \"a\":1\n  }", opts:{wrap:true, indent_last:true} },
+		{ json:"{\n \"a\":1\n }",   opts:{wrap:true, indent:" ", indent_last:true} },
 	]},
 
 	{value:{ b:17, a:42 }, tests:[
-		{ json:"{\"a\":42,\n \"b\":17}", opts:{wrap:10,sorted:true,short:true} }
+		{ json:"{\"a\":42,\n \"b\":17}", opts:{wrap:10,sorted:true,short:true} },
 	]},
 
 	{value:[1,{a:2},3], tests:[
@@ -98,7 +100,8 @@ TESTS = [
 		{ json:'[ 1,{ "a":2 },3 ]',                       opts:{padding:1} },
 		{ json:'[ 1, { "a":2 }, 3 ]',                     opts:{padding:1,after_comma:1} },
 		{ json:"[\n  1,\n  {\n    \"a\":2\n  },\n  3\n]", opts:{wrap:true} },
-		{ json:"[\n  1,\n  {\"a\":2},\n  3\n]",           opts:{wrap:10} }
+		{ json:"[\n  1,\n  {\"a\":2},\n  3\n]",           opts:{wrap:10} },
+		{ json:"[\n  1,\n  {\n    \"a\":2\n    },\n  3\n  ]", opts:{wrap:true,indent_last:true} },
 	]},
 
 	{value:[1,{a:2,b:3},4], tests:[
@@ -107,16 +110,17 @@ TESTS = [
 
 	{value:{a:1,b:[2,3,4],c:3}, tests:[
 		{ json:'{"a":1,"b":[2,3,4],"c":3}' },
-		{ json:"{\n  \"a\":1,\n  \"b\":[2,3,4],\n  \"c\":3\n}",                       opts:{wrap:10} },
-		{ json:"{\n  \"a\":1,\n  \"b\":[\n    2,\n    3,\n    4\n  ],\n  \"c\":3\n}", opts:{wrap:true} }
+		{ json:"{\n  \"a\":1,\n  \"b\":[2,3,4],\n  \"c\":3\n}",                           opts:{wrap:10} },
+		{ json:"{\n  \"a\":1,\n  \"b\":[\n    2,\n    3,\n    4\n  ],\n  \"c\":3\n}",     opts:{wrap:true} },
+		{ json:"{\n  \"a\":1,\n  \"b\":[\n    2,\n    3,\n    4\n    ],\n  \"c\":3\n  }", opts:{wrap:true,indent_last:true} },
 	]},
 
 	{value:{hooo:42,whee:['yaaa','oooo','booy'],zoop:"whoop"}, tests:[
-		{ json:"{\"hooo\":42,\n \"whee\":[\"yaaa\",\n         \"oooo\",\n         \"booy\"],\n \"zoop\":\"whoop\"}", opts:{wrap:20,short:true} }
+		{ json:"{\"hooo\":42,\n \"whee\":[\"yaaa\",\n         \"oooo\",\n         \"booy\"],\n \"zoop\":\"whoop\"}", opts:{wrap:20,short:true} },
 	]},
 
 	{value:{ a:[ {x:"foo",y:"jim"}, {x:"bar",y:"jam"} ] }, tests:[
-		{ json:"{\"a\":[{\"x\":\"foo\",\n       \"y\":\"jim\"},\n      {\"x\":\"bar\",\n       \"y\":\"jam\"}]}", opts:{wrap:true,short:true} }
+		{ json:"{\"a\":[{\"x\":\"foo\",\n       \"y\":\"jim\"},\n      {\"x\":\"bar\",\n       \"y\":\"jam\"}]}", opts:{wrap:true,short:true} },
 	]},
 
 	{value:{"abcdefghij"=>[{"abcdefghijklmnop"=>{}}]}, tests:[
@@ -128,17 +132,17 @@ TESTS = [
 		{ json:"{\"foo\":{}}" },
 		{ json:"{\"foo\":{}}",        opts:{wrap:false} },
 		{ json:"{\n  \"foo\":{}\n}",  opts:{wrap:5}    },
-		{ json:"{\"foo\":{}}",        opts:{wrap:1, short:true} }
+		{ json:"{\"foo\":{}}",        opts:{wrap:1, short:true} },
 	]},
 
 	{value:["foo",{},"bar"], tests:[
 		{ json:"[\n  \"foo\",\n  {},\n  \"bar\"\n]",  opts:{wrap:1} },
-		{ json:"[\"foo\",\n {},\n \"bar\"]",          opts:{wrap:1, short:true} }
+		{ json:"[\"foo\",\n {},\n \"bar\"]",          opts:{wrap:1, short:true} },
 	]},
 
 	{value:["foo",[],"bar"], tests:[
 		{ json:"[\n  \"foo\",\n  [],\n  \"bar\"\n]",  opts:{wrap:1} },
-		{ json:"[\"foo\",\n [],\n \"bar\"]",          opts:{wrap:1, short:true} }
+		{ json:"[\"foo\",\n [],\n \"bar\"]",          opts:{wrap:1, short:true} },
 	]},
 
 	{value:["foo",[{},[{foo:[]},42]],"bar"], tests:[
@@ -153,7 +157,7 @@ TESTS = [
 
 	{value:Class.new{ def to_json(*a); JSON.neat_generate({a:1},*a); end }.new, tests:[
 		{ json:'{"a":1}' },
-		{ json:"{\n  \"a\":1\n}", opts:{wrap:true} }
+		{ json:"{\n  \"a\":1\n}", opts:{wrap:true} },
 	]},
 
 	{value:{a:{b:{c:{d:{e:{f:{g:{h:{i:{j:{k:{l:{m:1}}}}}}}}}}}}}, tests:[

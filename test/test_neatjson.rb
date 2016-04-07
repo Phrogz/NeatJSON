@@ -1,5 +1,5 @@
-require '../lib/neatjson'
-require './tests'
+require_relative '../lib/neatjson'
+require_relative './tests'
 
 start = Time.now
 pass  = 0
