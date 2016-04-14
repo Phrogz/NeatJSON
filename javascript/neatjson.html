@@ -92,26 +92,38 @@
 
 	var lastInput,lastCommand,commandText;
 	function neaten(){
-		try{
-			changeOptions();
-			if (isEmpty(opts)) commandText = "neatJSON(obj)";
-			else{
-				var parts=[];
-				for (var k in opts) parts.push('<b>'+k+'<\/b>:'+JSON.stringify(opts[k]));
-				commandText = "neatJSON(obj,{ "+parts.join(', ')+" })";
-			}
-			if (commandText==lastCommand && inp.value==lastInput) return;
-			lastCommand = commandText;
-			lastInput   = inp.value;
+		changeOptions();
+		if (isEmpty(opts)) commandText = "neatJSON(obj)";
+		else{
+			var parts=[];
+			for (var k in opts) parts.push('<b>'+k+'<\/b>:'+JSON.stringify(opts[k]));
+			commandText = "neatJSON(obj,{ "+parts.join(', ')+" })";
+		}
+		if (commandText==lastCommand && inp.value==lastInput) return;
+		lastCommand = commandText;
+		lastInput   = inp.value;
 
+		var error;
+		try {
 			var obj = JSON.parse(inp.value);
+		} catch(e1){
+			error=e1;
+			if (e1 instanceof SyntaxError){
+				try {
+					eval("var obj = "+inp.value);
+				} catch(e2){
+					obj = undefined;
+				}
+			}
+		}
+		if (obj===undefined){
+			out.innerHTML = error;
+		}else{
 			var start = new Date;
 			out.innerHTML = neatJSON(obj,opts).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 			var elapsed = new Date-start;
 			console.log(commandText.replace(/<\/?b>/g,'')+" took "+elapsed+"ms");
 			code.innerHTML = "var json = "+commandText+"; <i>// took ~"+elapsed+"ms<\/i>";
-		}catch(e){
-			out.innerHTML = e;
 		}
 	}
 
