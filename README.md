@@ -162,6 +162,16 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **v0.7.2** - April 14th, 2016
+  * Fix JavaScript library to support objects without an `Object` constructor (e.g. `location`).
+  * Online HTML converter accepts arbitrary JavaScript values as input in addition to JSON.
+
+* **v0.7.1** - April 6th, 2016
+  * Fix Ruby library to work around bug in Opal.
+
+* **v0.7** - March 26th, 2016
+  * Add `indentLast`/`indent_last` feature.
+
 * **v0.6.2** - February 8th, 2016
   * Use memoization to avoid performance stalls when wrapping deeply-nested objects/arrays.  
     _Thanks @chroche_
