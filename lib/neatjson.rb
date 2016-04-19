@@ -78,8 +78,8 @@ module JSON
 						elsif opts[:short]
 							indent2 = "#{indent} #{apad}"
 							pieces = o.map{ |v| build[ v,indent2 ] }
-							pieces[0].sub! indent2, "#{indent}[#{apad}"
-							pieces.last << apad << "]"
+							pieces[0] = pieces[0].sub indent2, "#{indent}[#{apad}"
+							pieces[pieces.count - 1 ] =  pieces.last + apad + "]"
 							pieces.join ",\n"
 						else
 							indent2 = "#{indent}#{opts[:indent]}"
@@ -101,10 +101,11 @@ module JSON
 							if opts[:short]
 								keyvals = o.map{ |k,v| ["#{indent} #{opad}#{k.to_s.inspect}",v] }
 								keyvals = keyvals.sort_by(&:first) if opts[:sorted]
-								keyvals[0][0].sub! "#{indent} ", "#{indent}{"
+								keyvals[0][0] = keyvals[0][0].sub "#{indent} ", "#{indent}{"
 								if opts[:aligned]
 									longest = keyvals.map(&:first).map(&:length).max
-									keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
+									#keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
+									keyvals = keyvals.inject({}){|r, e| r["%-#{longest}s" % e.first] = e.last; r}
 								end
 								keyvals.map! do |k,v|
 									indent2 = " "*"#{k}#{colonn}".length
@@ -115,16 +116,17 @@ module JSON
 										one_line
 									end
 								end
-								keyvals.join(",\n") << opad << "}"
+								keyvals.join(",\n") + opad + "}"
 							else
 								keyvals = o.map{ |k,v| ["#{indent}#{opts[:indent]}#{k.to_s.inspect}",v] }
 								keyvals = keyvals.sort_by(&:first) if opts[:sorted]
 								if opts[:aligned]
 									longest = keyvals.map(&:first).map(&:length).max
-									keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
+									#keyvals.each{ |k,v| k.replace( "%-#{longest}s" % k ) }
+									keyvals = keyvals.inject({}){|r, e| r["%-#{longest}s" % e.first] = e.last; r}
 								end
 								indent2 = "#{indent}#{opts[:indent]}"
-								keyvals.map! do |k,v|
+								keyvals = keyvals.map do |k,v|
 									one_line = "#{k}#{colonn}#{build[v,'']}"
 									if opts[:wrap] && (one_line.length > opts[:wrap]) && (v.is_a?(Array) || v.is_a?(Hash))
 										"#{k}#{colonn}#{build[v,indent2].lstrip}"
