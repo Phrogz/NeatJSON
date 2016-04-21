@@ -56,6 +56,7 @@ TESTS = [
 	{value:{b:1,a:2}, tests:[
 		{ json:'{"b":1,"a":2}' },
 		{ json:'{"a":2,"b":1}',                   opts:{sorted:true} },
+		{ json:'{"a":2,"b":1}',                   opts:{sort:true}   },
 		{ json:'{"a":2, "b":1}',                  opts:{sorted:true,after_comma:1} },
 		{ json:'{"a" :2,"b" :1}',                 opts:{sorted:true,before_colon:1} },
 		{ json:'{"a": 2,"b": 1}',                 opts:{sorted:true,after_colon:1} },
@@ -92,7 +93,11 @@ TESTS = [
 	]},
 
 	{value:{ b:17, a:42 }, tests:[
-		{ json:"{\"a\":42,\n \"b\":17}", opts:{wrap:10,sorted:true,short:true} },
+		{ json:"{\"a\":42,\n \"b\":17}", opts:{wrap:10,sort:true,short:true} },
+		{ json:"{\"a\":42,\"b\":17}", opts:{wrap:false,sort:->(k){   k } } },
+		{ json:"{\"b\":17,\"a\":42}", opts:{wrap:false,sort:->(k,v){ v } } },
+		{ json:"{\"a\":42,\"b\":17}", opts:{wrap:false,sort:->(k,v){ -v } } },
+		{ json:"{\"a\":42,\"b\":17}", opts:{wrap:false,sort:->(k,v,h){ v==h.values.max ? 0 : 1 } } },
 	]},
 
 	{value:[1,{a:2},3], tests:[

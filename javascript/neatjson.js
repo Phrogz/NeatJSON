@@ -58,17 +58,22 @@ function neatJSON(value,opts){
 					return indent+'[\n'+o.map(function(v){ return build(v,indent2) }).join(',\n')+'\n'+(opts.indentLast?indent2:indent)+']';
 				}
 			}else if (o instanceof Object){
-				var keyvals=[],i=0;
-				for (var k in o) keyvals[i++] = [JSON.stringify(k), build(o[k],'')];
-				if (!keyvals.length) return indent+'{}';
+				var sortedKV=[],i=0;
+				var sort = opts.sort || opts.sorted;
+				for (var k in o){
+					var kv = sortedKV[i++] = [k,o[k]];
+					if (sort===true) kv[2] = k;
+					else if (typeof sort==='function') kv[2]=sort(k,o[k],o);
+				}
+				if (!sortedKV.length) return indent+'{}';
+				if (sort) sortedKV = sortedKV.sort(function(a,b){ a=a[2]; b=b[2]; return a<b?-1:a>b?1:0 });
+				var keyvals=sortedKV.map(function(kv){ return [JSON.stringify(kv[0]), build(kv[1],'')] });
 				if (opts.sorted) keyvals = keyvals.sort(function(kv1,kv2){ kv1=kv1[0]; kv2=kv2[0]; return kv1<kv2?-1:kv1>kv2?1:0 });
 				keyvals = keyvals.map(function(kv){ return kv.join(colon1) }).join(comma);
 				var oneLine = indent+"{"+opad+keyvals+opad+"}";
 				if (opts.wrap===false || oneLine.length<opts.wrap) return oneLine;
 				if (opts.short){
-					var keyvals=[],i=0;
-					for (var k in o) keyvals[i++] = [indent+' '+opad+JSON.stringify(k),o[k]];
-					if (opts.sorted) keyvals = keyvals.sort(function(kv1,kv2){ kv1=kv1[0]; kv2=kv2[0]; return kv1<kv2?-1:kv1>kv2?1:0 });
+					keyvals = sortedKV.map(function(kv){ return [indent+' '+opad+JSON.stringify(kv[0]), kv[1]] });
 					keyvals[0][0] = keyvals[0][0].replace(indent+' ',indent+'{');
 					if (opts.aligned){
 						var longest = 0;
@@ -122,6 +127,6 @@ function neatJSON(value,opts){
 		return (str + pad).substring(0, pad.length);
 	}
 }
-neatJSON.version = "0.7.2";
+neatJSON.version = "0.8";
 
 })(typeof exports === 'undefined' ? this : exports);

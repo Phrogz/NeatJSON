@@ -49,13 +49,13 @@ please" }
 puts JSON.neat_generate(o)
 #=> {"b":42.005,"a":[42,17],"longer":true,"str":"yes\nplease"}
 
-puts JSON.neat_generate(o,sorted:true)
+puts JSON.neat_generate(o,sort:true)
 #=> {"a":[42,17],"b":42.005,"longer":true,"str":"yes\nplease"}
 
-puts JSON.neat_generate(o,sorted:true,padding:1,after_comma:1)
+puts JSON.neat_generate(o,sort:true,padding:1,after_comma:1)
 #=> { "a":[ 42, 17 ], "b":42.005, "longer":true, "str":"yes\nplease" }
 
-puts JSON.neat_generate(o,sorted:true,wrap:40)
+puts JSON.neat_generate(o,sort:true,wrap:40)
 #=> {
 #=>   "a":[42,17],
 #=>   "b":42.005,
@@ -63,7 +63,7 @@ puts JSON.neat_generate(o,sorted:true,wrap:40)
 #=>   "str":"yes\nplease"
 #=> }
 
-puts JSON.neat_generate(o,sorted:true,wrap:40,decimals:2)
+puts JSON.neat_generate(o,sort:true,wrap:40,decimals:2)
 #=> {
 #=>   "a":[42,17],
 #=>   "b":42.01,
@@ -71,15 +71,15 @@ puts JSON.neat_generate(o,sorted:true,wrap:40,decimals:2)
 #=>   "str":"yes\nplease"
 #=> }
 
-puts JSON.neat_generate(o,sorted:true,wrap:40,aligned:true)
+puts JSON.neat_generate(o,sort:->(k){ k.length },wrap:40,aligned:true)
 #=> {
 #=>   "a"     :[42,17],
 #=>   "b"     :42.005,
-#=>   "longer":true,
-#=>   "str"   :"yes\nplease"
+#=>   "str"   :"yes\nplease",
+#=>   "longer":true
 #=> }
 
-puts JSON.neat_generate(o,sorted:true,wrap:40,aligned:true,around_colon:1)
+puts JSON.neat_generate(o,sort:true,wrap:40,aligned:true,around_colon:1)
 #=> {
 #=>   "a"      : [42,17],
 #=>   "b"      : 42.005,
@@ -87,7 +87,7 @@ puts JSON.neat_generate(o,sorted:true,wrap:40,aligned:true,around_colon:1)
 #=>   "str"    : "yes\nplease"
 #=> }
 
-puts JSON.neat_generate(o,sorted:true,wrap:40,aligned:true,around_colon:1,short:true)
+puts JSON.neat_generate(o,sort:true,wrap:40,aligned:true,around_colon:1,short:true)
 #=> {"a"      : [42,17],
 #=>  "b"      : 42.005,
 #=>  "longer" : true,
@@ -126,7 +126,7 @@ You may pass any of the following option symbols to `neat_generate`:
 * `:indent_last`    — Indent the closing bracket/brace for arrays and objects? Default: `false`
 * `:short`          — Keep the output 'short' when wrapping? This puts opening brackets on the same line as the first value, and closing brackets on the same line as the last. Default: `false`
   * _This causes the `:indent` and `:indent_last` options to be ignored, instead basing indentation on array and object padding._
-* `:sorted`         — Sort the keys for objects to be in alphabetical order? Default: `false`
+* `:sort`           — Sort the keys for objects to be in alphabetical order (`true`), or supply a lambda for customized sort order. Default: `false`
 * `:aligned`        — When wrapping objects, line up the colons (per object)? Default: `false`
 * `:decimals`       — Decimal precision to use for non-integer numbers; use `false` to keep float values precise. Default: `false`
 * `:array_padding`  — Number of spaces to put inside brackets for arrays. Default: `0`
@@ -142,6 +142,52 @@ You may pass any of the following option symbols to `neat_generate`:
 * `:before_colon`   — Shorthand to set both `:before_colon_1` and `:before_colon_n`. Default: `0`
 * `:after_colon`    — Shorthand to set both `:after_colon_1` and `:after_colon_n`. Default: `0`
 * `:around_colon`   — Shorthand to set both `:before_colon` and `:after_colon`. Default: `0`
+
+If you supply a lambda to the `sort` option, it will be passed three values:
+
+* The string name of the object key.
+* The associated value.
+* The object being sorted.
+
+For example:
+
+~~~ ruby
+# Ruby sorting examples
+obj = {e:3, a:2, c:3, b:2, d:1, f:3}
+
+JSON.neat_generate obj, sort:true                                   # sort by key name
+#=> {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
+
+JSON.neat_generate obj, wrap:40, sort:->(k){ k }                     # sort by key name (long way)
+#=> {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
+
+JSON.neat_generate obj, wrap:40, sort:->(k,v){ [-v,k] }              # sort by descending value, ascending key
+#=> {"c":3,"e":3,"f":3,"a":2,"b":2,"d":1}
+
+JSON.neat_generate obj, wrap:40, sort:->(k,v,h){ h.values.count(v) } # sort by count of keys with same value
+#=> {"d":1,"a":2,"b":2,"e":3,"c":3,"f":3}
+~~~
+
+~~~ js
+# JavaScript sorting examples
+var obj = {e:3, a:2, c:3, b:2, d:1, f:3};
+
+neatJSON( obj, {sort:true} );                                                   // sort by key name
+// {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
+
+neatJSON( obj, { wrap:40, sort:function(k){ return k }} );                      // sort by key name (long way)
+// {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
+
+neatJSON( obj, { wrap:40, sort:function(k,v){ return -v }} );                   // sort by descending value
+// {"e":3,"c":3,"f":3,"a":2,"b":2,"d":1}
+
+var countByValue = {};
+for (var k in obj) countByValue[obj[k]] = (countByValue[obj[k]]||0) + 1;
+neatJSON( obj, { wrap:40, sort:function(k,v,h){ return countByValue[v] } } );   // sort by count of keys with same value
+// {"d":1,"a":2,"b":2,"e":3,"c":3,"f":3}
+~~~
+
+_Note that the JavaScript version of NeatJSON does not provide a mechanism for cascading sort in the same manner as Ruby._
 
 
 ## License & Contact
@@ -161,6 +207,9 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 * Possibly allow "JSON5" output (legal identifiers unquoted, etc.)
 
 ## HISTORY
+
+* **v0.8** - April 21st, 2016
+  * Allow `sort` to take a lambda for customized sorting of object key/values.
 
 * **v0.7.2** - April 14th, 2016
   * Fix JavaScript library to support objects without an `Object` constructor (e.g. `location`).

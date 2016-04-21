@@ -60,6 +60,7 @@ exports.tests = [
 	{value:{b:1,a:2}, tests:[
 		{ json:'{"b":1,"a":2}' },
 		{ json:'{"a":2,"b":1}',              opts:{sorted:true} },
+		{ json:'{"a":2,"b":1}',              opts:{sort:true}   },
 		{ json:'{"a":2, "b":1}',             opts:{sorted:true,afterComma:1} },
 		{ json:'{"a" :2,"b" :1}',            opts:{sorted:true,beforeColon:1} },
 		{ json:'{"a": 2,"b": 1}',            opts:{sorted:true,afterColon:1} },
@@ -97,6 +98,10 @@ exports.tests = [
 
 	{value:{ b:17, a:42 }, tests:[
 		{ json:"{\"a\":42,\n \"b\":17}", opts:{wrap:10,sorted:true,short:true} },
+		{ json:"{\"a\":42,\"b\":17}",    opts:{wrap:false,sort:function(k){     return k              } } },
+		{ json:"{\"b\":17,\"a\":42}",    opts:{wrap:false,sort:function(k,v){   return v              } } },
+		{ json:"{\"a\":42,\"b\":17}",    opts:{wrap:false,sort:function(k,v){   return -v             } } },
+		{ json:"{\"a\":42,\"b\":17}",    opts:{wrap:false,sort:function(k,v,o){ return v==o.a ? 0 : 1 } } },
 	]},
 
 	{value:[1,{a:2},3], tests:[

@@ -10,7 +10,7 @@ module JSON
 	# @option opts [String]  :indent      ("  ")  Whitespace used to indent each level when wrapping (without the :short option).
 	# @option opts [Boolean] :indent_last (false) Indent the closing bracket for arrays and objects (without the :short option).
 	# @option opts [Boolean] :short       (false) Keep the output 'short' when wrapping, putting opening brackets on the same line as the first value, and closing brackets on the same line as the last item.
-	# @option opts [Boolean] :sorted      (false) Sort the keys for objects to be in alphabetical order.
+	# @option opts [Boolean] :sort        (false) Sort the keys for objects to be in alphabetical order (`true`), or supply a lambda to determine ordering.
 	# @option opts [Boolean] :aligned     (false) When wrapping objects, align the colons (only per object).
 	# @option opts [Integer] :decimals     (null) Decimal precision to use for floats; omit to keep numberic values precise.
 	# @option opts [Integer] :padding         (0) Number of spaces to put inside brackets/braces for both arrays and objects.
@@ -29,6 +29,9 @@ module JSON
 	# @option opts [Integer] :before_colon_n  (0) Number of spaces to put before colons for multi-line objects.
 	# @option opts [Integer] :after_colon_n   (0) Number of spaces to put after colons for multi-line objects.
 	# @return [String] the JSON representation of the object.
+	#
+	# The lambda for the `sort` option will be passed the string name of the key, the value, and the hash for the object being sorted.
+	# The values returned for all keys must be all comparable, or an error will occur.
 	def self.neat_generate(object,opts={})
 		opts[:wrap] = 80 unless opts.key?(:wrap)
 		opts[:wrap] = -1 if opts[:wrap]==true
@@ -91,8 +94,16 @@ module JSON
 					if o.empty?
 						"#{indent}{}"
 					else
+						case sort=(opts[:sorted] || opts[:sort])
+							when true then o = o.sort_by(&:first)
+							when Proc
+								o = case sort.arity
+								when 1 then o.sort_by{ |k,v| sort[k] }
+								when 2 then o.sort_by{ |k,v| sort[k,v] }
+								when 3 then o.sort_by{ |k,v| sort[k,v,o] }
+								end
+						end
 						keyvals = o.map{ |k,v| [ k.to_s.inspect, build[v,''] ] }
-						keyvals = keyvals.sort_by(&:first) if opts[:sorted]
 						keyvals = keyvals.map{ |kv| kv.join(colon1) }.join(comma)
 						one_line = "#{indent}{#{opad}#{keyvals}#{opad}}"
 						if !opts[:wrap] || (one_line.length <= opts[:wrap])
@@ -100,7 +111,6 @@ module JSON
 						else
 							if opts[:short]
 								keyvals = o.map{ |k,v| ["#{indent} #{opad}#{k.to_s.inspect}",v] }
-								keyvals = keyvals.sort_by(&:first) if opts[:sorted]
 								keyvals[0][0].sub! "#{indent} ", "#{indent}{"
 								if opts[:aligned]
 									longest = keyvals.map(&:first).map(&:length).max
