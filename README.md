@@ -155,16 +155,16 @@ For example:
 # Ruby sorting examples
 obj = {e:3, a:2, c:3, b:2, d:1, f:3}
 
-JSON.neat_generate obj, sort:true                                   # sort by key name
+JSON.neat_generate obj, sort:true                              # sort by key name
 #=> {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
 
-JSON.neat_generate obj, wrap:40, sort:->(k){ k }                     # sort by key name (long way)
+JSON.neat_generate obj, sort:->(k){ k }                        # sort by key name (long way)
 #=> {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
 
-JSON.neat_generate obj, wrap:40, sort:->(k,v){ [-v,k] }              # sort by descending value, ascending key
+JSON.neat_generate obj, sort:->(k,v){ [-v,k] }                 # sort by descending value, ascending key
 #=> {"c":3,"e":3,"f":3,"a":2,"b":2,"d":1}
 
-JSON.neat_generate obj, wrap:40, sort:->(k,v,h){ h.values.count(v) } # sort by count of keys with same value
+JSON.neat_generate obj, sort:->(k,v,h){ h.values.count(v) }    # sort by count of keys with same value
 #=> {"d":1,"a":2,"b":2,"e":3,"c":3,"f":3}
 ~~~
 
@@ -172,18 +172,18 @@ JSON.neat_generate obj, wrap:40, sort:->(k,v,h){ h.values.count(v) } # sort by c
 // JavaScript sorting examples
 var obj = {e:3, a:2, c:3, b:2, d:1, f:3};
 
-neatJSON( obj, {sort:true} );                                                   // sort by key name
+neatJSON( obj, {sort:true} );                                               // sort by key name
 // {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
 
-neatJSON( obj, { wrap:40, sort:function(k){ return k }} );                      // sort by key name (long way)
+neatJSON( obj, { sort:function(k){ return k }} );                          // sort by key name (long way)
 // {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
 
-neatJSON( obj, { wrap:40, sort:function(k,v){ return -v }} );                   // sort by descending value
+neatJSON( obj, { sort:function(k,v){ return -v }} );                       // sort by descending value
 // {"e":3,"c":3,"f":3,"a":2,"b":2,"d":1}
 
 var countByValue = {};
 for (var k in obj) countByValue[obj[k]] = (countByValue[obj[k]]||0) + 1;
-neatJSON( obj, { wrap:40, sort:function(k,v,h){ return countByValue[v] } } );   // sort by count of same value
+neatJSON( obj, { sort:function(k,v,h){ return countByValue[v] } } );       // sort by count of same value
 // {"d":1,"a":2,"b":2,"e":3,"c":3,"f":3}
 ~~~
 
