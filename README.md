@@ -169,7 +169,7 @@ JSON.neat_generate obj, wrap:40, sort:->(k,v,h){ h.values.count(v) } # sort by c
 ~~~
 
 ~~~ js
-# JavaScript sorting examples
+// JavaScript sorting examples
 var obj = {e:3, a:2, c:3, b:2, d:1, f:3};
 
 neatJSON( obj, {sort:true} );                                                   // sort by key name
@@ -183,7 +183,7 @@ neatJSON( obj, { wrap:40, sort:function(k,v){ return -v }} );                   
 
 var countByValue = {};
 for (var k in obj) countByValue[obj[k]] = (countByValue[obj[k]]||0) + 1;
-neatJSON( obj, { wrap:40, sort:function(k,v,h){ return countByValue[v] } } );   // sort by count of keys with same value
+neatJSON( obj, { wrap:40, sort:function(k,v,h){ return countByValue[v] } } );   // sort by count of same value
 // {"d":1,"a":2,"b":2,"e":3,"c":3,"f":3}
 ~~~
 
