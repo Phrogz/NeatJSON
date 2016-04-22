@@ -208,6 +208,9 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **v0.8.1** - April 22nd, 2016
+  * Make NeatJSON work with [Opal](http://opalrb.org) (by removing all in-place string mutations)
+
 * **v0.8** - April 21st, 2016
   * Allow `sort` to take a lambda for customized sorting of object key/values.
 
