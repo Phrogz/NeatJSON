@@ -172,7 +172,7 @@ JSON.neat_generate obj, sort:->(k,v,h){ h.values.count(v) }    # sort by count o
 // JavaScript sorting examples
 var obj = {e:3, a:2, c:3, b:2, d:1, f:3};
 
-neatJSON( obj, {sort:true} );                                               // sort by key name
+neatJSON( obj, {sort:true} );                                              // sort by key name
 // {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
 
 neatJSON( obj, { sort:function(k){ return k }} );                          // sort by key name (long way)
@@ -192,7 +192,7 @@ _Note that the JavaScript version of NeatJSON does not provide a mechanism for c
 
 ## License & Contact
 
-NeatJSON is copyright ©2015 by Gavin Kistner and is released under
+NeatJSON is copyright ©2015–2016 by Gavin Kistner and is released under
 the [MIT License](http://www.opensource.org/licenses/mit-license.php).
 See the LICENSE.txt file for more details.
 
