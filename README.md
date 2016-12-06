@@ -126,7 +126,8 @@ You may pass any of the following option symbols to `neat_generate`:
 * `:indent_last`    — Indent the closing bracket/brace for arrays and objects? Default: `false`
 * `:short`          — Keep the output 'short' when wrapping? This puts opening brackets on the same line as the first value, and closing brackets on the same line as the last. Default: `false`
   * _This causes the `:indent` and `:indent_last` options to be ignored, instead basing indentation on array and object padding._
-* `:sort`           — Sort the keys for objects to be in alphabetical order (`true`), or supply a lambda for customized sort order. Default: `false`
+* `:sort`           — Sort objects' keys in alphabetical order (`true`), or supply a lambda for custom sorting. Default: `false`
+  * If you supply a lambda to the `sort` option, it will be passed three values: the (string) name of the key, the associated value, and the object being sorted, e.g. `{ sort:->(key,value,hash){ Float(value) rescue Float::MAX } }`
 * `:aligned`        — When wrapping objects, line up the colons (per object)? Default: `false`
 * `:decimals`       — Decimal precision to use for non-integer numbers; use `false` to keep float values precise. Default: `false`
 * `:array_padding`  — Number of spaces to put inside brackets for arrays. Default: `0`
@@ -143,13 +144,7 @@ You may pass any of the following option symbols to `neat_generate`:
 * `:after_colon`    — Shorthand to set both `:after_colon_1` and `:after_colon_n`. Default: `0`
 * `:around_colon`   — Shorthand to set both `:before_colon` and `:after_colon`. Default: `0`
 
-If you supply a lambda to the `sort` option, it will be passed three values:
-
-* The string name of the object key.
-* The associated value.
-* The object being sorted.
-
-For example:
+You may omit the 'value' and/or 'object' parameters in your `sort` lambda if desired. For example:
 
 ~~~ ruby
 # Ruby sorting examples
@@ -161,7 +156,7 @@ JSON.neat_generate obj, sort:true                              # sort by key nam
 JSON.neat_generate obj, sort:->(k){ k }                        # sort by key name (long way)
 #=> {"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}
 
-JSON.neat_generate obj, sort:->(k,v){ [-v,k] }                 # sort by descending value, ascending key
+JSON.neat_generate obj, sort:->(k,v){ [-v,k] }                 # sort by descending value, then by ascending key
 #=> {"c":3,"e":3,"f":3,"a":2,"b":2,"d":1}
 
 JSON.neat_generate obj, sort:->(k,v,h){ h.values.count(v) }    # sort by count of keys with same value
