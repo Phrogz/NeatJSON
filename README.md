@@ -234,7 +234,8 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
-* **(web-only update)** - December 16th, 2016
+* **v0.8.2** - December 16th, 2016
+  * Fix issue #22: Sorting keys on multi-line object does not work without "short" [JS only]
   * Update online interface to support tabs as well as spaces.
   * Update online interface to use a textarea for the output (easier to select and copy).
   * Update online interface turn off spell checking for input and output.

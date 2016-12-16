@@ -4,7 +4,9 @@ var count=0, pass=0;
 require('./tests.js').tests.forEach(function(valTest){
 	var value = valTest.value;
 	valTest.tests.forEach(function(test){
-		var cmd = "neatJSON("+JSON.stringify(value)+(test.opts?","+JSON.stringify(test.opts):'')+")";
+		var cmdOpts = test.opts ? JSON.parse(JSON.stringify(test.opts)) : '';
+		if (test.opts && typeof test.opts.sort==='function') cmdOpts.sort = test.opts.sort+'';
+		var cmd = "neatJSON("+JSON.stringify(value)+(test.opts?","+JSON.stringify(cmdOpts):'')+")";
 		try{
 			if (test.opts){
 				var opts = {};
@@ -22,7 +24,7 @@ require('./tests.js').tests.forEach(function(valTest){
 				console.log('ACTUAL');
 				console.log(json,"\n");
 			}
-		} catch (e){
+		} catch(e) {
 			console.log("Error running "+cmd);
 			console.log(e.stack);
 			console.log("")

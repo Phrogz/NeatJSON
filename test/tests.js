@@ -98,6 +98,9 @@ exports.tests = [
 
 	{value:{ b:17, a:42 }, tests:[
 		{ json:"{\"a\":42,\n \"b\":17}", opts:{wrap:10,sorted:true,short:true} },
+		{ json:"{\"a\":42,\n \"b\":17}", opts:{wrap:10,sort:true,  short:true} },
+		{ json:"{\n  \"a\":42,\n  \"b\":17\n}", opts:{wrap:1,sorted:true} },
+		{ json:"{\n  \"a\":42,\n  \"b\":17\n}", opts:{wrap:1,sort:true} },
 		{ json:"{\"a\":42,\"b\":17}",    opts:{wrap:false,sort:function(k){     return k              } } },
 		{ json:"{\"b\":17,\"a\":42}",    opts:{wrap:false,sort:function(k,v){   return v              } } },
 		{ json:"{\"a\":42,\"b\":17}",    opts:{wrap:false,sort:function(k,v){   return -v             } } },

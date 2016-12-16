@@ -91,7 +91,7 @@ function neatJSON(value,opts){
 				}else{
 					var keyvals=[],i=0;
 					for (var k in o) keyvals[i++] = [indent+opts.indent+JSON.stringify(k),o[k]];
-					if (opts.sorted) keyvals = keyvals.sort(function(kv1,kv2){ kv1=kv1[0]; kv2=kv2[0]; return kv1<kv2?-1:kv1>kv2?1:0 });
+					if (sort) keyvals = keyvals.sort(function(kv1,kv2){ kv1=kv1[0]; kv2=kv2[0]; return kv1<kv2?-1:kv1>kv2?1:0 });
 					if (opts.aligned){
 						var longest = 0;
 						for (var i=keyvals.length;i--;) if (keyvals[i][0].length>longest) longest = keyvals[i][0].length;
@@ -127,6 +127,6 @@ function neatJSON(value,opts){
 		return (str + pad).substring(0, pad.length);
 	}
 }
-neatJSON.version = "0.8.1";
+neatJSON.version = "0.8.2";
 
 })(typeof exports === 'undefined' ? this : exports);
