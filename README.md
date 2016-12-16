@@ -203,6 +203,11 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **(web-only update)** - December 16th, 2016
+  * Update online interface to support tabs as well as spaces.
+  * Update online interface to use a textarea for the output (easier to select and copy).
+  * Update online interface turn off spell checking for input and output.
+
 * **v0.8.1** - April 22nd, 2016
   * Make NeatJSON work with [Opal](http://opalrb.org) (by removing all in-place string mutations)
 

@@ -17,6 +17,7 @@
 		input[type="range"] { width:5em }
 		b { background:yellow }
 		i { opacity:0.4; font-style:normal }
+		#input, #output { tab-size:4 }
 	</style>
 </head><body>
 <h1>NeatJSON Online</h1>
@@ -26,15 +27,18 @@
 	<div class="option-row">
 		<span class="option">
 			<label title="Limit the number of decimals displayed?"><input type="checkbox" id="useDecimals"> Format Decimals?</label>
-			<input type="text" id="decimals" value="3" size="3" min="0" max="10" style="visibility:hidden">
+			<input type="text" id="decimals" value="3" size="3" min="0" max="10" style="display:none">
 		</span>
 		<span class="option" title="Use alphabetical ordering for object keys?"><label><input type="checkbox" id="sorted"> Sort Keys?</label></span>
 		<span class="option">
 			<label title="Force line wrapping?"><input type="checkbox" id="wrap" checked> Wrap?</label>
-			<label id="wrapopts1">width <input type="text" id="wrapSize" value="40" size="3"></label>
+			<label id="wrapopts1" title="Column width to wrap at (without breaking values).">width <input type="text" id="wrapSize" value="40" size="3"></label>
+			<label id="wrapopts3" title="Line up colons on multi-line objects?"><input type="checkbox" id="aligned" checked> Align Values?</label>
 			<label id="wrapopts2" title="Put opening/closing brackets on the same line as data?"><input type="checkbox" id="short" checked> Short?</label>
-			<label id="wrapopts3"><input type="checkbox" id="aligned" checked> Align Keys?</label>
-			<label id="wrapopts4">Indent Spaces <input type="range" id="indent" value="2" min="0" max="7" step="1"></label>
+			<span class="option" id="wrapopts4">
+				<label title="Use tabs instead of spaces at the start of lines?"><input type="checkbox" id="tabs"> Use Tabs?</label>
+				<label title="Number of tabs/spaces to use">Indent <input type="range" id="indent" value="2" min="0" max="7" step="1"></label>
+			</span>
 			<label id="wrapopts5" title="Indent the closing bracket/brace for arrays and objects?"><input type="checkbox" id="indentlast"> Indent Last?</label>
 		</span>
 	</div><div class="option-row">
@@ -50,9 +54,9 @@
 	</div>
 </div>
 
-<textarea id="input">["foo","bar",{"dogs":42,"piggies":0,"cats":7},{"jimmy":[1,2,3,4,5],"jammy":3.14159265358979,"hot":"pajammy"}]</textarea>
+<textarea id="input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">["foo","bar",{"dogs":42,"piggies":0,"cats":7},{"jimmy":[1,2,3,4,5],"jammy":3.14159265358979,"hot":"pajammy"}]</textarea>
 <pre id="code"></pre>
-<textarea id="output"></textarea>
+<textarea id="output" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 <div id="copyright">NeatJSON is copyright ©2015-2016 Gavin Kistner. Available under the <a href="https://raw.githubusercontent.com/Phrogz/NeatJSON/master/LICENSE.txt">MIT License</a>. For feature requests and bug reports please use the <a href="https://github.com/Phrogz/NeatJSON/issues">GitHub Issues</a> page.</div>
 <script type="text/javascript" src="neatjson.js"></script>
 <script type="text/javascript">
@@ -76,6 +80,7 @@
 	    decN  = document.querySelector('#decimals'),
 	    sort  = document.querySelector('#sorted'),
 	    algn  = document.querySelector('#aligned'),
+	    tabs  = document.querySelector('#tabs'),
 	    indN  = document.querySelector('#indent'),
 	    indL  = document.querySelector('#indentlast'),
 	    arrayPadding  = document.querySelector('#arrayPadding'),
@@ -137,14 +142,14 @@
 		document.querySelector('#wrapopts4').style.visibility = wrap.checked ? (shrt.checked ? 'hidden' : '') : 'hidden';
 		document.querySelector('#wrapopts5').style.visibility = wrap.checked ? (shrt.checked ? 'hidden' : '') : 'hidden';
 
-		if (indN.value!=2 && (wrap.checked && !shrt.checked)) opts.indent = repeat(' ',indN.value*1);
+		if ((indN.value!=2 || tabs.checked) && (wrap.checked && !shrt.checked)) opts.indent = repeat(tabs.checked ? '\t' : ' ',indN.value*1);
 		if (indL.checked && wrap.checked && !shrt.checked) opts.indentLast = true;
 
 		if (dec0.checked){
 			opts.decimals = decN.value*1;
-			decN.style.visibility = '';
+			decN.style.display = '';
 		}else{
-			decN.style.visibility = 'hidden';
+			decN.style.display = 'none';
 		}
 
 		if (sort.checked) opts.sort = true;
