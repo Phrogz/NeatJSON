@@ -3,9 +3,22 @@
 [![Gem Version](https://badge.fury.io/rb/neatjson.svg)](http://badge.fury.io/rb/neatjson)
 [![Gem Downloads](http://ruby-gem-downloads-badge.herokuapp.com/neatjson?type=total&color=brightgreen)](https://rubygems.org/gems/neatjson)
 
-Pretty-print your JSON in Ruby with more power than is provided by `JSON.pretty_generate`. In particular, like Ruby's `pp` (pretty print), NeatJSON will keep objects on one line if they fit, but break them over multiple lines if needed.
+Pretty-print your JSON in Ruby or JavaScript with more power than is provided by `JSON.pretty_generate` (Ruby) or `JSON.stringify` (JS). For example, like Ruby's `pp` (pretty print), NeatJSON can keep objects on one line if they fit, but break them over multiple lines if needed.
 
-Here's an excerpt (from a much larger JSON):
+**Features (all optional):**
+
+* Keep values on one line, with variable wrap width.
+* Format numeric values to specified precision.
+* Sort object keys to be in alphabetical order.
+* Arbitrary whitespace (or really, any string) for indentation.
+* "Short" wrapping uses fewer lines, indentation based on values. (See last example below.)
+* Indent final closing bracket/brace for each array/object.
+* Adjust number of spaces inside array/object braces.
+* Adjust number of spaces before/after commas and colons (adjustable for single-line vs. multi-line )
+* Line up the values for an object across lines.
+* [Online webpage](http://phrogz.net/JS/NeatJSON) for conversions and experimenting with options.
+
+Here's a short example of output showing the power of proper wrapping:
 
 ~~~ json
 {
@@ -36,7 +49,9 @@ Here's an excerpt (from a much larger JSON):
 
 ## Installation
 
-`gem install neatjson`
+* Ruby: `gem install neatjson`
+* JavaScript: Clone the GitHub repo and copy `javascript/neatjson.js`
+  * _Sorry, no NodeJS package yet._
 
 ## Examples
 
@@ -116,6 +131,22 @@ puts JSON.neat_generate( a, wrap:true, short:true )
 #=>  [3,
 #=>   4,
 #=>   [5]]]
+
+data = ["foo","bar",{dogs:42,piggies:{color:'pink', tasty:true},
+        barn:{jimmy:[1,2,3,4,5],jammy:3.141592653,hot:"pajammy"},cats:7}]
+
+opts = { short:true, wrap:60, decimals:3, sort:true, aligned:true,
+         padding:1, after_comma:1, around_colon_n:1 }
+
+puts JSON.neat_generate( data, opts )
+#=> [ "foo",
+#=>   "bar",
+#=>   { "barn"    : { "hot"   : "pajammy",
+#=>                   "jammy" : 3.142,
+#=>                   "jimmy" : [ 1, 2, 3, 4, 5 ] },
+#=>     "cats"    : 7,
+#=>     "dogs"    : 42,
+#=>     "piggies" : { "color":"pink", "tasty":true } } ]
 ~~~
 
 ## Options
