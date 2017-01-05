@@ -1,5 +1,7 @@
 require 'json'
 module JSON
+	class Engine < ::Rails::Engine
+	end
 	# Generate the JSON string representation for an object,
 	# with a variety of formatting options.
 	#
