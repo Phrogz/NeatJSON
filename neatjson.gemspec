@@ -12,6 +12,6 @@ Gem::Specification.new do |s|
 	s.license       = "MIT license (MIT)"
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
-  s.files         = Dir.glob("{lib,test,html}/**/*") + ['LICENSE.txt', 'README.md', '.yardopts', __FILE__]
+  s.files         = Dir.glob("{lib,test,app}/**/**") + ['LICENSE.txt', 'README.md', '.yardopts', __FILE__]
 	s.has_rdoc      = 'yard'
 end
