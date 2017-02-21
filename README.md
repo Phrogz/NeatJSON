@@ -14,7 +14,7 @@ Pretty-print your JSON in Ruby or JavaScript with more power than is provided by
 * "Short" wrapping uses fewer lines, indentation based on values. (See last example below.)
 * Indent final closing bracket/brace for each array/object.
 * Adjust number of spaces inside array/object braces.
-* Adjust number of spaces before/after commas and colons (adjustable for single-line vs. multi-line )
+* Adjust number of spaces before/after commas and colons (both for single- vs. multi-line).
 * Line up the values for an object across lines.
 * [Online webpage](http://phrogz.net/JS/NeatJSON) for conversions and experimenting with options.
 
@@ -47,11 +47,32 @@ Here's a short example of output showing the power of proper wrapping:
 }
 ~~~
 
+
 ## Installation
 
 * Ruby: `gem install neatjson`
 * JavaScript: Clone the GitHub repo and copy `javascript/neatjson.js`
   * _Sorry, no NodeJS package yet._
+
+
+## Usage
+
+**Ruby**:
+
+~~~ ruby
+require 'neatjson'
+json = JSON.neat_generate( value, options )
+~~~
+
+**JavaScript**:
+
+~~~ html
+<script type="text/javascript" src="neatjson.js"></script>
+<script type="text/javascript">
+    var json = neatJSON( value, options );
+</script>
+~~~
+
 
 ## Examples
 
@@ -149,31 +170,32 @@ puts JSON.neat_generate( data, opts )
 #=>     "piggies" : { "color":"pink", "tasty":true } } ]
 ~~~
 
-## Options
-You may pass any of the following option symbols to `neat_generate`:
 
-* `:wrap`           — The maximum line width before wrapping. Use `false` to never wrap, or `true` (or `-1`) to always wrap. Default: `80`
-* `:indent`         — Whitespace used to indent each level when wrapping. Default: `"  "` (two spaces)
-* `:indent_last`    — Indent the closing bracket/brace for arrays and objects? Default: `false`
-* `:short`          — Keep the output 'short' when wrapping? This puts opening brackets on the same line as the first value, and closing brackets on the same line as the last. Default: `false`
-  * _This causes the `:indent` and `:indent_last` options to be ignored, instead basing indentation on array and object padding._
-* `:sort`           — Sort objects' keys in alphabetical order (`true`), or supply a lambda for custom sorting. Default: `false`
+## Options
+You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript):
+
+* `wrap`           — Maximum line width before wrapping. Use `false` to never wrap, `true` to always wrap. default:`80`
+* `indent`         — Whitespace used to indent each level when wrapping. default:`"  "` (two spaces)
+* `indent_last`    — Indent the closing bracket/brace for arrays and objects? default:`false`
+* `short`          — Put opening brackets on the same line as the first value, closing brackets on the same line as the last? default:`false`
+  * _This causes the `indent` and `indent_last` options to be ignored, instead basing indentation on array and object padding._
+* `sort`           — Sort objects' keys in alphabetical order (`true`), or supply a lambda for custom sorting. default:`false`
   * If you supply a lambda to the `sort` option, it will be passed three values: the (string) name of the key, the associated value, and the object being sorted, e.g. `{ sort:->(key,value,hash){ Float(value) rescue Float::MAX } }`
-* `:aligned`        — When wrapping objects, line up the colons (per object)? Default: `false`
-* `:decimals`       — Decimal precision to use for non-integer numbers; use `false` to keep float values precise. Default: `false`
-* `:array_padding`  — Number of spaces to put inside brackets for arrays. Default: `0`
-* `:object_padding` — Number of spaces to put inside braces for objects.  Default: `0`
-* `:padding`        — Shorthand to set both `:array_padding` and `:object_padding`. Default: `0`
-* `:before_comma`   — Number of spaces to put before commas (for both arrays and objects). Default: `0`
-* `:after_comma`    — Number of spaces to put after commas (for both arrays and objects). Default: `0`
-* `:around_comma`   — Shorthand to set both `:before_comma` and `:after_comma`. Default: `0`
-* `:before_colon_1` — Number of spaces before a colon when the object is on one line. Default: `0`
-* `:after_colon_1`  — Number of spaces after a colon when the object is on one line. Default: `0`
-* `:before_colon_n` — Number of spaces before a colon when the object is on multiple lines. Default: `0`
-* `:after_colon_n`  — Number of spaces after a colon when the object is on multiple lines. Default: `0`
-* `:before_colon`   — Shorthand to set both `:before_colon_1` and `:before_colon_n`. Default: `0`
-* `:after_colon`    — Shorthand to set both `:after_colon_1` and `:after_colon_n`. Default: `0`
-* `:around_colon`   — Shorthand to set both `:before_colon` and `:after_colon`. Default: `0`
+* `aligned`        — When wrapping objects, line up the colons (per object)? default:`false`
+* `decimals`       — Decimal precision for non-integer numbers; use `false` to keep values precise. default:`false`
+* `array_padding`  — Number of spaces to put inside brackets for arrays. default:`0`
+* `object_padding` — Number of spaces to put inside braces for objects.  default:`0`
+* `padding`        — Shorthand to set both `array_padding` and `object_padding`. default:`0`
+* `before_comma`   — Number of spaces to put before commas (for both arrays and objects). default:`0`
+* `after_comma`    — Number of spaces to put after commas (for both arrays and objects). default:`0`
+* `around_comma`   — Shorthand to set both `before_comma` and `after_comma`. default:`0`
+* `before_colon_1` — Number of spaces before a colon when the object is on one line. default:`0`
+* `after_colon_1`  — Number of spaces after a colon when the object is on one line. default:`0`
+* `before_colon_n` — Number of spaces before a colon when the object is on multiple lines. default:`0`
+* `after_colon_n`  — Number of spaces after a colon when the object is on multiple lines. default:`0`
+* `before_colon`   — Shorthand to set both `before_colon_1` and `before_colon_n`. default:`0`
+* `after_colon`    — Shorthand to set both `after_colon_1` and `after_colon_n`. default:`0`
+* `around_colon`   — Shorthand to set both `before_colon` and `after_colon`. default:`0`
 
 You may omit the 'value' and/or 'object' parameters in your `sort` lambda if desired. For example:
 
@@ -218,12 +240,13 @@ _Note that the JavaScript version of NeatJSON does not provide a mechanism for c
 
 ## License & Contact
 
-NeatJSON is copyright ©2015–2016 by Gavin Kistner and is released under
+NeatJSON is copyright ©2015–2017 by Gavin Kistner and is released under
 the [MIT License](http://www.opensource.org/licenses/mit-license.php).
 See the LICENSE.txt file for more details.
 
 For bugs or feature requests please open [issues on GitHub][1].
 For other communication you can [email the author directly](mailto:!@phrogz.net?subject=NeatJSON).
+
 
 ## TODO (aka Known Limitations)
 
@@ -232,66 +255,67 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 * Possibly allow illegal JSON values like `NaN` or `Infinity`.
 * Possibly allow "JSON5" output (legal identifiers unquoted, etc.)
 
+
 ## HISTORY
 
 * **v0.8.3** — February 20, 2017
   * Fix issue #25: Sorting keys on multi-line object **using function** does not work without "short" [JS only]
     * _Thanks Bernhard Weichel_
 
-* **v0.8.2** - December 16th, 2016
+* **v0.8.2** — December 16th, 2016
   * Fix issue #22: Sorting keys on multi-line object does not work without "short" [JS only]
   * Update online interface to support tabs as well as spaces.
   * Update online interface to use a textarea for the output (easier to select and copy).
   * Update online interface turn off spell checking for input and output.
 
-* **v0.8.1** - April 22nd, 2016
+* **v0.8.1** — April 22nd, 2016
   * Make NeatJSON work with [Opal](http://opalrb.org) (by removing all in-place string mutations)
 
-* **v0.8** - April 21st, 2016
+* **v0.8** — April 21st, 2016
   * Allow `sort` to take a lambda for customized sorting of object key/values.
 
-* **v0.7.2** - April 14th, 2016
+* **v0.7.2** — April 14th, 2016
   * Fix JavaScript library to support objects without an `Object` constructor (e.g. `location`).
   * Online HTML converter accepts arbitrary JavaScript values as input in addition to JSON.
 
-* **v0.7.1** - April 6th, 2016
+* **v0.7.1** — April 6th, 2016
   * Fix Ruby library to work around bug in Opal.
 
-* **v0.7** - March 26th, 2016
+* **v0.7** — March 26th, 2016
   * Add `indentLast`/`indent_last` feature.
 
-* **v0.6.2** - February 8th, 2016
+* **v0.6.2** — February 8th, 2016
   * Use memoization to avoid performance stalls when wrapping deeply-nested objects/arrays.
     _Thanks @chroche_
 
-* **v0.6.1** - October 12th, 2015
+* **v0.6.1** — October 12th, 2015
   * Fix handling of nested empty objects and arrays. (Would cause a runtime error in many cases.)
     * _This change causes empty arrays in a tight wrapping scenario to appear on a single line where they would previously take up three lines._
 
-* **v0.6** - April 26th, 2015
+* **v0.6** — April 26th, 2015
   * Added `before_colon_1` and `before_colon_n` to distinguish between single-line and multi-line objects.
 
-* **v0.5** - April 19th, 2015
+* **v0.5** — April 19th, 2015
   * Do not format integers (or floats that equal their integer) using `decimals` option.
   * Make `neatJSON()` JavaScript available to Node.js as well as web browsers.
   * Add (Node-based) testing for the JavaScript version.
 
-* **v0.4** - April 18th, 2015
+* **v0.4** — April 18th, 2015
   * Add JavaScript version with online runner.
 
-* **v0.3.2** - April 16th, 2015
+* **v0.3.2** — April 16th, 2015
   * Force YARD to use Markdown for documentation.
 
-* **v0.3.1** - April 16th, 2015
+* **v0.3.1** — April 16th, 2015
   * Remove some debugging code accidentally left in.
 
-* **v0.3** - April 16th, 2015
+* **v0.3** — April 16th, 2015
   * Fix another bug with `short:true` and wrapping array values inside objects.
 
-* **v0.2** - April 16th, 2015
+* **v0.2** — April 16th, 2015
   * Fix bug with `short:true` and wrapping values inside objects.
 
-* **v0.1** - April 15th, 2015
+* **v0.1** — April 15th, 2015
   * Initial release.
 
 [1]: https://github.com/Phrogz/NeatJSON/issues
