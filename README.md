@@ -234,6 +234,10 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **v0.8.3** — February 20, 2017
+  * Fix issue #25: Sorting keys on multi-line object **using function** does not work without "short" [JS only]
+    * _Thanks Bernhard Weichel_
+
 * **v0.8.2** - December 16th, 2016
   * Fix issue #22: Sorting keys on multi-line object does not work without "short" [JS only]
   * Update online interface to support tabs as well as spaces.
@@ -257,7 +261,7 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
   * Add `indentLast`/`indent_last` feature.
 
 * **v0.6.2** - February 8th, 2016
-  * Use memoization to avoid performance stalls when wrapping deeply-nested objects/arrays.  
+  * Use memoization to avoid performance stalls when wrapping deeply-nested objects/arrays.
     _Thanks @chroche_
 
 * **v0.6.1** - October 12th, 2015

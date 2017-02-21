@@ -105,6 +105,8 @@ exports.tests = [
 		{ json:"{\"b\":17,\"a\":42}",    opts:{wrap:false,sort:function(k,v){   return v              } } },
 		{ json:"{\"a\":42,\"b\":17}",    opts:{wrap:false,sort:function(k,v){   return -v             } } },
 		{ json:"{\"a\":42,\"b\":17}",    opts:{wrap:false,sort:function(k,v,o){ return v==o.a ? 0 : 1 } } },
+		{ json:"{\n\"b\":17,\n\"a\":42\n}", opts:{wrap:1,indent:"",sort:function(k){ return k=="a" ? 1 : 0 } } },
+		{ json:"{\n\"a\":42,\n\"b\":17\n}", opts:{wrap:1,indent:"",sort:function(k){ return k=="a" ? 0 : 1 } } },
 	]},
 
 	{value:[1,{a:2},3], tests:[

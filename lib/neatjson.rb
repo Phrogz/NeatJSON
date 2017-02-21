@@ -130,7 +130,6 @@ module JSON
 								"#{keyvals.join(",\n")}#{opad}}"
 							else
 								keyvals = o.map{ |k,v| ["#{indent}#{opts[:indent]}#{k.to_s.inspect}",v] }
-								keyvals = keyvals.sort_by(&:first) if opts[:sorted]
 								if opts[:aligned]
 									longest = keyvals.map(&:first).map(&:length).max
 									formatk = "%-#{longest}s"

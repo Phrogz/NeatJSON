@@ -101,6 +101,8 @@ TESTS = [
 		{ json:"{\"b\":17,\"a\":42}", opts:{wrap:false,sort:->(k,v){ v } } },
 		{ json:"{\"a\":42,\"b\":17}", opts:{wrap:false,sort:->(k,v){ -v } } },
 		{ json:"{\"a\":42,\"b\":17}", opts:{wrap:false,sort:->(k,v,h){ v==h.values.max ? 0 : 1 } } },
+		{ json:"{\n\"b\":17,\n\"a\":42\n}", opts:{wrap:1,indent:"",sort:->(k,v){ k==:a ? 1 : 0 } } },
+		{ json:"{\n\"a\":42,\n\"b\":17\n}", opts:{wrap:1,indent:"",sort:->(k,v){ k==:a ? 0 : 1 } } },
 	]},
 
 	{value:[1,{a:2},3], tests:[

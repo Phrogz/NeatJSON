@@ -15,7 +15,7 @@ TESTS.each do |value_tests|
 			raise "EXPECTED:\n#{test[:json]}\nACTUAL:\n#{json}" unless test[:json]===json
 			pass += 1
 		rescue StandardError => e
-			puts "Error running #{cmd}", e, ""
+			puts "Failure running #{cmd}", e, ""
 		end
 		count += 1
 		if $perftesting
