@@ -76,22 +76,23 @@ json = JSON.neat_generate( value, options )
 
 ## Examples
 
+_The following are all in Ruby._
+
 ~~~ ruby
 require 'neatjson'
 
-o = { b:42.005, a:[42,17], longer:true, str:"yes
-please" }
+o = { b:42.005, a:[42,17], longer:true, str:"yes\nplease" }
 
 puts JSON.neat_generate(o)
 #=> {"b":42.005,"a":[42,17],"longer":true,"str":"yes\nplease"}
 
-puts JSON.neat_generate(o,sort:true)
+puts JSON.neat_generate(o, sort:true)
 #=> {"a":[42,17],"b":42.005,"longer":true,"str":"yes\nplease"}
 
 puts JSON.neat_generate(o,sort:true,padding:1,after_comma:1)
 #=> { "a":[ 42, 17 ], "b":42.005, "longer":true, "str":"yes\nplease" }
 
-puts JSON.neat_generate(o,sort:true,wrap:40)
+puts JSON.neat_generate(o, sort:true, wrap:40)
 #=> {
 #=>   "a":[42,17],
 #=>   "b":42.005,
@@ -99,7 +100,7 @@ puts JSON.neat_generate(o,sort:true,wrap:40)
 #=>   "str":"yes\nplease"
 #=> }
 
-puts JSON.neat_generate(o,sort:true,wrap:40,decimals:2)
+puts JSON.neat_generate(o, sort:true, wrap:40, decimals:2)
 #=> {
 #=>   "a":[42,17],
 #=>   "b":42.01,
@@ -107,7 +108,7 @@ puts JSON.neat_generate(o,sort:true,wrap:40,decimals:2)
 #=>   "str":"yes\nplease"
 #=> }
 
-puts JSON.neat_generate(o,sort:->(k){ k.length },wrap:40,aligned:true)
+puts JSON.neat_generate(o, sort:->(k){ k.length }, wrap:40, aligned:true)
 #=> {
 #=>   "a"     :[42,17],
 #=>   "b"     :42.005,
@@ -115,7 +116,7 @@ puts JSON.neat_generate(o,sort:->(k){ k.length },wrap:40,aligned:true)
 #=>   "longer":true
 #=> }
 
-puts JSON.neat_generate(o,sort:true,wrap:40,aligned:true,around_colon:1)
+puts JSON.neat_generate(o, sort:true, wrap:40, aligned:true, around_colon:1)
 #=> {
 #=>   "a"      : [42,17],
 #=>   "b"      : 42.005,
@@ -123,7 +124,7 @@ puts JSON.neat_generate(o,sort:true,wrap:40,aligned:true,around_colon:1)
 #=>   "str"    : "yes\nplease"
 #=> }
 
-puts JSON.neat_generate(o,sort:true,wrap:40,aligned:true,around_colon:1,short:true)
+puts JSON.neat_generate(o, sort:true, wrap:40, aligned:true, around_colon:1, short:true)
 #=> {"a"      : [42,17],
 #=>  "b"      : 42.005,
 #=>  "longer" : true,
@@ -231,7 +232,7 @@ neatJSON( obj, { sort:function(k,v){ return -v }} );                       // so
 
 var countByValue = {};
 for (var k in obj) countByValue[obj[k]] = (countByValue[obj[k]]||0) + 1;
-neatJSON( obj, { sort:function(k,v,h){ return countByValue[v] } } );       // sort by count of same value
+neatJSON( obj, { sort:function(k,v){ return countByValue[v] } } );         // sort by count of same value
 // {"d":1,"a":2,"b":2,"e":3,"c":3,"f":3}
 ~~~
 
