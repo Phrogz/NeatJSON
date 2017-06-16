@@ -180,7 +180,17 @@ puts JSON.neat_generate( data, opts )
 
 
 ## Options
-You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript):
+You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript). **Note**: option names with underscores above use camelCase in JavaScript. For example:
+
+~~~ ruby
+# Ruby
+json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon_n:2, indent_last:true
+~~~
+
+
+~~~ js
+var json = neatJSON( myValue, { arrayPadding:1, afterComma:1, beforeColonN:2, indentLast:true } );
+~~~
 
 * `wrap`           — Maximum line width before wrapping. Use `false` to never wrap, `true` to always wrap. default:`80`
 * `indent`         — Whitespace used to indent each level when wrapping. default:`"  "` (two spaces)
@@ -206,14 +216,6 @@ You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON
 * `around_colon`   — Shorthand to set both `before_colon` and `after_colon`. default:`0`
 
 You may omit the 'value' and/or 'object' parameters in your `sort` lambda if desired. For example:
-
-**Note**: option names with underscores above use camelCase in JavaScript. For example:
-
-~~~ js
-var json = neatJSON( myValue, { arrayPadding:1, afterComma:1, beforeColonN:2, indentLast:true } );
-~~~
-
----
 
 ~~~ ruby
 # Ruby sorting examples
