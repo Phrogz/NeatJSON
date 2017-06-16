@@ -51,8 +51,8 @@ Here's a short example of output showing the power of proper wrapping:
 ## Installation
 
 * Ruby: `gem install neatjson`
-* JavaScript: Clone the GitHub repo and copy `javascript/neatjson.js`
-  * _Sorry, no NodeJS package yet._
+* JavaScript (web): Clone the GitHub repo and copy `javascript/neatjson.js`
+* Node.js: `npm install neatjson`
 
 
 ## Usage
@@ -64,7 +64,7 @@ require 'neatjson'
 json = JSON.neat_generate( value, options )
 ~~~
 
-**JavaScript**:
+**JavaScript (web)**:
 
 ~~~ html
 <script type="text/javascript" src="neatjson.js"></script>
@@ -74,9 +74,16 @@ json = JSON.neat_generate( value, options )
 ~~~
 
 
+**Node.js**:
+
+~~~ js
+const { neatJSON } = require('neatjson');
+var json = neatJSON( value, options );
+~~~
+
 ## Examples
 
-_The following are all in Ruby._
+_The following are all in Ruby, but similar options apply in JavaScript._
 
 ~~~ ruby
 require 'neatjson'
@@ -199,6 +206,14 @@ You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON
 * `around_colon`   — Shorthand to set both `before_colon` and `after_colon`. default:`0`
 
 You may omit the 'value' and/or 'object' parameters in your `sort` lambda if desired. For example:
+
+**Note**: option names with underscores above use camelCase in JavaScript. For example:
+
+~~~ js
+var json = neatJSON( myValue, { arrayPadding:1, afterComma:1, beforeColonN:2, indentLast:true } );
+~~~
+
+---
 
 ~~~ ruby
 # Ruby sorting examples
