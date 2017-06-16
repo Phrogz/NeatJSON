@@ -180,7 +180,7 @@ puts JSON.neat_generate( data, opts )
 
 
 ## Options
-You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript). **Note**: option names with underscores above use camelCase in JavaScript. For example:
+You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript). **Note**: option names with underscores below use camelCase in JavaScript. For example:
 
 ~~~ ruby
 # Ruby
@@ -189,6 +189,7 @@ json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon
 
 
 ~~~ js
+// JavaScript
 var json = neatJSON( myValue, { arrayPadding:1, afterComma:1, beforeColonN:2, indentLast:true } );
 ~~~
 
