@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 	s.homepage      = "http://github.com/Phrogz/NeatJSON"
 	s.summary       = "Pretty, powerful, flexible JSON generation."
 	s.description   = "Generate JSON strings from Ruby objects with flexible formatting options. Key features: keep arrays and objects on a single line when they fit; format floats to specific precision; sort and align object keys; adjust whitespace padding of arrays and objects, inside and around commas and colons. JavaScript version included."
-	s.license       = "MIT license (MIT)"
+	s.license       = "MIT"
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
   s.files         = Dir.glob("{lib,test,html}/**/*") + ['LICENSE.txt', 'README.md', '.yardopts', __FILE__]
