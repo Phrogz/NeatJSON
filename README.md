@@ -18,35 +18,15 @@ Pretty-print your JSON in Ruby or JavaScript with more power than is provided by
 * Line up the values for an object across lines.
 * [Online webpage](http://phrogz.net/JS/NeatJSON) for conversions and experimenting with options.
 
-Here's a short example of output showing the power of proper wrapping:
+## Table of Contents
 
-~~~ json
-{
-  "navigation.createroute.poi":[
-    {"text":"Lay in a course to the Hilton","params":{"poi":"Hilton"}},
-    {"text":"Take me to the airport","params":{"poi":"airport"}},
-    {"text":"Let's go to IHOP","params":{"poi":"IHOP"}},
-    {"text":"Show me how to get to The Med","params":{"poi":"The Med"}},
-    {"text":"Create a route to Arby's","params":{"poi":"Arby's"}},
-    {
-      "text":"Go to the Hilton by the Airport",
-      "params":{"poi":"Hilton","location":"Airport"}
-    },
-    {
-      "text":"Take me to the Fry's in Fresno",
-      "params":{"poi":"Fry's","location":"Fresno"}
-    }
-  ],
-  "navigation.eta":[
-    {"text":"When will we get there?"},
-    {"text":"When will I arrive?"},
-    {"text":"What time will I get to the destination?"},
-    {"text":"What time will I reach the destination?"},
-    {"text":"What time will it be when I arrive?"}
-  ]
-}
-~~~
-
+* [Installation](#installation)
+* [Usage](#usage)
+* [Examples](#examples)
+* [Options](#options)
+* [License & Contact](#license--contact)
+* [TODO/Known Limitations](#todo-aka-known-limitations)
+* [History](#history)
 
 ## Installation
 
@@ -186,7 +166,6 @@ You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON
 # Ruby
 json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon_n:2, indent_last:true
 ~~~
-
 
 ~~~ js
 // JavaScript
