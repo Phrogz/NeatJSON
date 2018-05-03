@@ -96,7 +96,7 @@ module JSON
 						"#{indent}{}"
 					else
 						case sort=(opts[:sorted] || opts[:sort])
-							when true then o = o.sort_by(&:first)
+							when true then o = o.sort_by{|k,v| k.to_s }
 							when Proc
 								o = case sort.arity
 								when 1 then o.sort_by{ |k,v| sort[k] }

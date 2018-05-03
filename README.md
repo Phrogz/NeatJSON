@@ -256,6 +256,10 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **v0.8.4** — May 3, 2018
+  * Fix issue #27: Default sorting fails with on objects with mixed keys [Ruby only]
+    * _Thanks Reid Beels_
+
 * **v0.8.3** — February 20, 2017
   * Fix issue #25: Sorting keys on multi-line object **using function** does not work without "short" [JS only]
     * _Thanks Bernhard Weichel_
