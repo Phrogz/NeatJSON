@@ -63,7 +63,11 @@ module JSON
 				when TrueClass,FalseClass then "#{indent}#{o}"
 				when NilClass             then "#{indent}null"
 				when Float
-					if (o==o.to_i) && (o.to_s !~ /e/)
+					if o.infinite?
+						"#{indent}#{o<0 ? "-9e9999" : "9e9999"}"
+					elsif o.nan?
+						"#{indent}\"NaN\""
+					elsif (o==o.to_i) && (o.to_s !~ /e/)
 						build[o.to_i,indent]
 					elsif opts[:decimals]
 						"#{indent}%.#{opts[:decimals]}f" % o

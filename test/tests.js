@@ -169,6 +169,11 @@ exports.tests = [
 		{ json:"{\n  \"a\":{\n    \"b\":{\n      \"c\":{\n        \"d\":{\n          \"e\":{\n            \"f\":{\n              \"g\":{\n                \"h\":{\n                  \"i\":{\n                    \"j\":{\n                      \"k\":{\n                        \"l\":{\n                          \"m\":1\n                        }\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}", opts:{wrap:1} },
 	]},
 
+	{value:{inf:1/0, neginf:-1/0, nan:0/0}, tests:[
+		{ json:'{"inf":9e9999,"nan":"NaN","neginf":-9e9999}', opts:{sort:true} },
+	]},
+
+
 	// {value:Class.new{ def to_json(*a); {a:1}.to_json(*a); end }.new, tests:[
 	// 	{ json:'{  "a":1}' },
 	// 	{ json:'{  "a":1}', opts:{wrap:true} },

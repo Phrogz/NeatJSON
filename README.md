@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/neatjson.svg)](http://badge.fury.io/rb/neatjson)
 [![Gem Downloads](http://ruby-gem-downloads-badge.herokuapp.com/neatjson?type=total&color=brightgreen)](https://rubygems.org/gems/neatjson)
 
-Pretty-print your JSON in Ruby or JavaScript with more power than is provided by `JSON.pretty_generate` (Ruby) or `JSON.stringify` (JS). For example, like Ruby's `pp` (pretty print), NeatJSON can keep objects on one line if they fit, but break them over multiple lines if needed.
+Pretty-print your JSON in Ruby or JavaScript or Lua with more power than is provided by `JSON.pretty_generate` (Ruby) or `JSON.stringify` (JS). For example, like Ruby's `pp` (pretty print), NeatJSON can keep objects on one line if they fit, but break them over multiple lines if needed.
 
 **Features (all optional):**
 
@@ -17,6 +17,8 @@ Pretty-print your JSON in Ruby or JavaScript with more power than is provided by
 * Adjust number of spaces before/after commas and colons (both for single- vs. multi-line).
 * Line up the values for an object across lines.
 * [Online webpage](http://phrogz.net/JS/NeatJSON) for conversions and experimenting with options.
+* [Lua only] Produce Lua table serialization.
+
 
 ## Table of Contents
 
@@ -27,6 +29,7 @@ Pretty-print your JSON in Ruby or JavaScript with more power than is provided by
 * [License & Contact](#license--contact)
 * [TODO/Known Limitations](#todo-aka-known-limitations)
 * [History](#history)
+
 
 ## Installation
 
@@ -43,6 +46,7 @@ Pretty-print your JSON in Ruby or JavaScript with more power than is provided by
 require 'neatjson'
 json = JSON.neat_generate( value, options )
 ~~~
+
 
 **JavaScript (web)**:
 
@@ -61,9 +65,17 @@ const { neatJSON } = require('neatjson');
 var json = neatJSON( value, options );
 ~~~
 
+
+**Lua**:
+
+~~~ lua
+local neatJSON = require'neatjson'
+local json = neatJSON(value, options)
+~~~
+
 ## Examples
 
-_The following are all in Ruby, but similar options apply in JavaScript._
+_The following are all in Ruby, but similar options apply in JavaScript and Lua._
 
 ~~~ ruby
 require 'neatjson'
@@ -160,7 +172,7 @@ puts JSON.neat_generate( data, opts )
 
 
 ## Options
-You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript). **Note**: option names with underscores below use camelCase in JavaScript. For example:
+You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript/Lua). **Note**: option names with underscores below use camelCase in JavaScript and Lua. For example:
 
 ~~~ ruby
 # Ruby
@@ -170,6 +182,11 @@ json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon
 ~~~ js
 // JavaScript
 var json = neatJSON( myValue, { arrayPadding:1, afterComma:1, beforeColonN:2, indentLast:true } );
+~~~
+
+~~~ lua
+-- Lua
+local json = neatJSON( myValue, { arrayPadding=1, afterComma=1, beforeColonN=2, indentLast=true } )
 ~~~
 
 * `wrap`           — Maximum line width before wrapping. Use `false` to never wrap, `true` to always wrap. default:`80`
@@ -194,6 +211,8 @@ var json = neatJSON( myValue, { arrayPadding:1, afterComma:1, beforeColonN:2, in
 * `before_colon`   — Shorthand to set both `before_colon_1` and `before_colon_n`. default:`0`
 * `after_colon`    — Shorthand to set both `after_colon_1` and `after_colon_n`. default:`0`
 * `around_colon`   — Shorthand to set both `before_colon` and `after_colon`. default:`0`
+* `lua`            — (Lua only) Output a Lua table literal instead of JSON? default:`false`
+* `emptyTablesAreObjects` — (Lua only) Should `{}` in Lua become a JSON object (`{}`) or JSON array (`[]`)? default:`false` (array)
 
 You may omit the 'value' and/or 'object' parameters in your `sort` lambda if desired. For example:
 
@@ -233,12 +252,12 @@ neatJSON( obj, { sort:function(k,v){ return countByValue[v] } } );         // so
 // {"d":1,"a":2,"b":2,"e":3,"c":3,"f":3}
 ~~~
 
-_Note that the JavaScript version of NeatJSON does not provide a mechanism for cascading sort in the same manner as Ruby._
+_Note that the JavaScript and Lua versions of NeatJSON do not provide a mechanism for cascading sort in the same manner as Ruby._
 
 
 ## License & Contact
 
-NeatJSON is copyright ©2015–2017 by Gavin Kistner and is released under
+NeatJSON is copyright ©2015–2019 by Gavin Kistner and is released under
 the [MIT License](http://www.opensource.org/licenses/mit-license.php).
 See the LICENSE.txt file for more details.
 
@@ -250,11 +269,15 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 * Figure out the best way to play with custom objects that use `to_json` for their representation.
 * Detect circular references.
-* Possibly allow illegal JSON values like `NaN` or `Infinity`.
 * Possibly allow "JSON5" output (legal identifiers unquoted, etc.)
 
 
 ## HISTORY
+
+* **v0.9** — July 29, 2019
+  * Add Lua version, serializing to both JSON and Lua table literals
+  * All languages serialize Infinity/-Infinity to JSON as `9e9999` and `-9e9999`
+  * All languages serialize NaN to JSON as `"NaN"`
 
 * **v0.8.4** — May 3, 2018
   * Fix issue #27: Default sorting fails with on objects with mixed keys [Ruby only]

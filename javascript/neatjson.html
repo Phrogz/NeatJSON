@@ -17,12 +17,13 @@
 		input[type="range"] { width:5em }
 		b { background:yellow }
 		i { opacity:0.4; font-style:normal }
-		#input, #output { tab-size:4 }
+		#input, #output { tab-size:4; font-family:monospace }
+		#copyright { position:absolute; bottom:0.5em }
 	</style>
 </head><body>
 <h1>NeatJSON Online</h1>
 <div id="content">
-<p id="description">NeatJSON provides <a href="https://rubygems.org/gems/neatjson">Ruby</a> and JavaScript libraries for formatting <a href="http://json.org/">JSON</a> strings. To test it out, paste your JSON (formatted however) into the top box below, adjust the formatting options, and see the results at the bottom.</p>
+<p id="description">NeatJSON provides a <a href="https://rubygems.org/gems/neatjson">Ruby library</a>, <a href="https://github.com/Phrogz/NeatJSON/blob/master/javascript/neatjson.js">JavaScript library</a>, and <a href="https://github.com/Phrogz/NeatJSON/blob/master/javascript/neatjson.js">Lua library</a> for formatting values as JSON strings. To test it out, paste your JSON (formatted however) into the top box below, adjust the formatting options, and see the results at the bottom.</p>
 <div id="options">
 	<div class="option-row">
 		<span class="option">
@@ -57,7 +58,7 @@
 <textarea id="input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">["foo","bar",{"dogs":42,"piggies":0,"cats":7},{"jimmy":[1,2,3,4,5],"jammy":3.14159265358979,"hot":"pajammy"}]</textarea>
 <pre id="code"></pre>
 <textarea id="output" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
-<div id="copyright">NeatJSON is copyright ©2015-2016 Gavin Kistner. Available under the <a href="https://raw.githubusercontent.com/Phrogz/NeatJSON/master/LICENSE.txt">MIT License</a>. For feature requests and bug reports please use the <a href="https://github.com/Phrogz/NeatJSON/issues">GitHub Issues</a> page.</div>
+<div id="copyright">NeatJSON is copyright ©2015–2019 Gavin Kistner. Available under the <a href="https://raw.githubusercontent.com/Phrogz/NeatJSON/master/LICENSE.txt">MIT License</a>. For feature requests and bug reports please use the <a href="https://github.com/Phrogz/NeatJSON/issues">GitHub Issues</a> page.</div>
 <script type="text/javascript" src="neatjson.js"></script>
 <script type="text/javascript">
 	document.querySelector('h1').innerHTML += " v"+neatJSON.version;
@@ -73,16 +74,16 @@
 	    out = document.querySelector('#output');
 	var opts;
 
-	var wrap  = document.querySelector('#wrap'),
-	    wdth  = document.querySelector('#wrapSize'),
-	    shrt  = document.querySelector('#short'),
-	    dec0  = document.querySelector('#useDecimals'),
-	    decN  = document.querySelector('#decimals'),
-	    sort  = document.querySelector('#sorted'),
-	    algn  = document.querySelector('#aligned'),
-	    tabs  = document.querySelector('#tabs'),
-	    indN  = document.querySelector('#indent'),
-	    indL  = document.querySelector('#indentlast'),
+	var wrap = document.querySelector('#wrap'),
+	    wdth = document.querySelector('#wrapSize'),
+	    shrt = document.querySelector('#short'),
+	    dec0 = document.querySelector('#useDecimals'),
+	    decN = document.querySelector('#decimals'),
+	    sort = document.querySelector('#sorted'),
+	    algn = document.querySelector('#aligned'),
+	    tabs = document.querySelector('#tabs'),
+	    indN = document.querySelector('#indent'),
+	    indL = document.querySelector('#indentlast'),
 	    arrayPadding  = document.querySelector('#arrayPadding'),
 	    objectPadding = document.querySelector('#objectPadding'),
 	    beforeComma   = document.querySelector('#beforeComma'),

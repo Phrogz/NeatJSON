@@ -174,7 +174,7 @@ TESTS = [
 		{ json:'{"a":{"b":{"c":{"d":{"e":{"f":{"g":{"h":{"i":{"j":{"k":{"l":{"m":1}}}}}}}}}}}}}', opts:{wrap:false} },
 		{ json:'{"a":{"b":{"c":{"d":{"e":{"f":{"g":{"h":{"i":{"j":{"k":{"l":{"m":1}}}}}}}}}}}}}', opts:{wrap:1,short:true} },
 		{ json:"{\n  \"a\":{\n    \"b\":{\n      \"c\":{\n        \"d\":{\n          \"e\":{\n            \"f\":{\n              \"g\":{\n                \"h\":{\n                  \"i\":{\n                    \"j\":{\n                      \"k\":{\n                        \"l\":{\n                          \"m\":1\n                        }\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}", opts:{wrap:1} },
-	]}, 
+	]},
 
 	# Issue #27
 	{value:{'b'=>2, a:1}, tests:[
@@ -183,6 +183,10 @@ TESTS = [
 		{json:'{"a":1,"b":2}', opts:{wrap:false, sort:->(k,v){k.to_s}}},
 		{json:'{"a":1,"b":2}', opts:{wrap:false, sort:->(k,v,o){k.to_s}}},
 		{json:'{"a":1,"b":2}', opts:{wrap:false, sort:true}},
+	]},
+
+	{value:{inf:1.0/0, neginf:-1.0/0, nan:0.0/0}, tests:[
+		{ json:'{"inf":9e9999,"nan":"NaN","neginf":-9e9999}', opts:{sort:true} },
 	]},
 ]
 
