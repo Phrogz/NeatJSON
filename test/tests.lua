@@ -174,7 +174,8 @@ return {
 	}},
 
 	{value={1,2,3,a=4,['for']=5}, tests={
-		{ json='{[1]=1,[2]=2,[3]=3,a=4,["for"]=5}', opts={lua=true, sort=true} }
+		{ json='{[1]=1,[2]=2,[3]=3,a=4,["for"]=5}', opts={lua=true, sort=true} },
+		{ json='{\n  [1]=1,\n  [2]=2,\n  [3]=3,\n  a=4,\n  ["for"]=5\n}', opts={lua=true, sort=true, wrap=true} },
 	}},
 
 	{value={inf=1/0, neginf=-1/0, nan=0/0}, tests={

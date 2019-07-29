@@ -127,9 +127,20 @@ local function neatJSON(value, opts)
 					end
 					return table.concat(keyvals, ',\n')..opad..'}'
 				else
-					local keyvals={}
-					for i,kv in ipairs(sortedKV) do
-						keyvals[i] = {indent..opts.indent..string.format('%q',kv[1]), kv[2]}
+					local keyvals
+					if opts.lua then
+						keyvals=map(sortedKV, function(kv)
+							if type(kv[1])=='string' and not keywords[kv[1]] and string.match(kv[1],'^[%a_][%w_]*$') then
+								return {table.concat{indent,opts.indent,kv[1]}, kv[2]}
+							else
+								return {string.format('%s%s[%q]',indent,opts.indent,kv[1]), kv[2]}
+							end
+						end)
+					else
+						keyvals = {}
+						for i,kv in ipairs(sortedKV) do
+							keyvals[i] = {indent..opts.indent..string.format('%q',kv[1]), kv[2]}
+						end
 					end
 					if opts.aligned then
 						local longest = math.max(table.unpack(map(keyvals, function(kv) return #kv[1] end)))
