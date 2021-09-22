@@ -25,7 +25,7 @@ module JSON
 	# @option opts [Integer] :around_colon_1  (0) Number of spaces to put before/after colons for single-line objects.
 	# @option opts [Integer] :before_colon_1  (0) Number of spaces to put before colons for single-line objects.
 	# @option opts [Integer] :after_colon_1   (0) Number of spaces to put after colons for single-line objects.
-	# @option opts [Integer] :aroun_n  (0) Number of spaces to put before/after colons for multi-line objects.
+	# @option opts [Integer] :around_colon_n  (0) Number of spaces to put before/after colons for multi-line objects.
 	# @option opts [Integer] :before_colon_n  (0) Number of spaces to put before colons for multi-line objects.
 	# @option opts [Integer] :after_colon_n   (0) Number of spaces to put after colons for multi-line objects.
 	# @return [String] the JSON representation of the object.
