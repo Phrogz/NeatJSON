@@ -39,6 +39,12 @@ local function neatJSON(value, opts)
 	opts.beforeColonN  = opts.beforeColonN  or opts.aroundColonN or opts.beforeColon or 0
 	opts.afterColonN   = opts.afterColonN   or opts.aroundColonN or opts.afterColon  or 0
 
+	-- Convert array to a lookup table for convenience
+	local floatsForcedForKey = {}
+	for _,key in ipairs(opts.forceFloatsIn or {}) do
+		floatsForcedForKey[key] = true
+	end
+
 	local colon  = opts.lua and '=' or ':'
 	local array  = opts.lua and {'{','}'} or {'[',']'}
 	local apad   = string.rep(' ', opts.arrayPadding)
@@ -48,32 +54,38 @@ local function neatJSON(value, opts)
 	local colonN = string.rep(' ',opts.beforeColonN)..colon..string.rep(' ',opts.afterColonN)
 
 	local build -- set lower
-	local function rawBuild(o,indent)
+	local function rawBuild(o, indent, floatsForced)
 		if o==nil then
 			return indent..'null'
 		else
 			local kind = type(o)
 			if kind=='number' then
-				local _,frac = math.modf(o)
-				return indent .. string.format( frac~=0 and opts.decimals and ('%.'..opts.decimals..'f') or '%g', o)
+				local treatAsFloat = floatsForced or (math.fmod(o, 1)~=0)
+				local result = indent .. string.format(treatAsFloat and opts.decimals and ('%.'..opts.decimals..'f') or '%.10g', o)
+				if opts.trimTrailingZeros then
+					result = tonumber(result)
+					result = tostring((math.fmod(result, 1)==0) and math.floor(result) or result)
+				end
+				if floatsForced and not result:find('%.') then result = result .. '.0' end
+				return result
 			elseif kind=='boolean' or kind=='nil' then
 				return indent..tostring(o)
 			elseif kind=='string' then
 				return indent..string.format('%q', o):gsub('\\\n','\\n')
 			elseif isarray(o, opts.emptyTablesAreObjects) then
 				if #o==0 then return indent..array[1]..array[2] end
-				local pieces = map(o, function(v) return build(v,'') end)
+				local pieces = map(o, function(v) return build(v, '', floatsForced) end)
 				local oneLine = indent..array[1]..apad..table.concat(pieces,comma)..apad..array[2]
 				if opts.wrap==false or #oneLine<=opts.wrap then return oneLine end
 				if opts.short then
 					local indent2 = indent..' '..apad;
-					pieces = map(o, function(v) return build(v,indent2) end)
+					pieces = map(o, function(v) return build(v, indent2, floatsForced) end)
 					pieces[1] = pieces[1]:gsub(indent2,indent..array[1]..apad, 1)
 					pieces[#pieces] = pieces[#pieces]..apad..array[2]
 					return table.concat(pieces, ',\n')
 				else
 					local indent2 = indent..opts.indent
-					return indent..array[1]..'\n'..table.concat(map(o, function(v) return build(v,indent2) end), ',\n')..'\n'..(opts.indentLast and indent2 or indent)..array[2]
+					return indent..array[1]..'\n'..table.concat(map(o, function(v) return build(v, indent2, floatsForced) end), ',\n')..'\n'..(opts.indentLast and indent2 or indent)..array[2]
 				end
 			elseif kind=='table' then
 				if not next(o) then return indent..'{}' end
@@ -95,14 +107,15 @@ local function neatJSON(value, opts)
 				local keyvals
 				if opts.lua then
 					keyvals=map(sortedKV, function(kv)
+						local isFloatKey = opts.forceFloats or floatsForcedForKey[kv[1]]
 						if type(kv[1])=='string' and not keywords[kv[1]] and string.match(kv[1],'^[%a_][%w_]*$') then
-							return string.format('%s%s%s',kv[1],colon1,build(kv[2],''))
+							return string.format('%s%s%s',kv[1],colon1,build(kv[2], '', isFloatKey))
 						else
-							return string.format('[%q]%s%s',kv[1],colon1,build(kv[2],''))
+							return string.format('[%q]%s%s',kv[1],colon1,build(kv[2], '', isFloatKey))
 						end
 					end)
 				else
-					keyvals=map(sortedKV, function(kv) return string.format('%q%s%s',kv[1],colon1,build(kv[2],'')) end)
+					keyvals=map(sortedKV, function(kv) return string.format('%q%s%s',kv[1],colon1,build(kv[2], '', opts.forceFloats or floatsForcedForKey[kv[1]])) end)
 				end
 				keyvals=table.concat(keyvals, comma)
 				local oneLine = indent.."{"..opad..keyvals..opad.."}"
@@ -118,11 +131,11 @@ local function neatJSON(value, opts)
 					for i,kv in ipairs(keyvals) do
 						local k,v = kv[1], kv[2]
 						local indent2 = string.rep(' ',#(k..colonN))
-						local oneLine = k..colonN..build(v,'')
+						local oneLine = k..colonN..build(v, '', opts.forceFloats or floatsForcedForKey[k])
 						if opts.wrap==false or #oneLine<=opts.wrap or not v or type(v)~='table' then
 							keyvals[i] = oneLine
 						else
-							keyvals[i] = k..colonN..build(v,indent2):gsub('^%s+','',1)
+							keyvals[i] = k..colonN..build(v, indent2, opts.forceFloats or floatsForcedForKey[k]):gsub('^%s+','',1)
 						end
 					end
 					return table.concat(keyvals, ',\n')..opad..'}'
@@ -150,11 +163,11 @@ local function neatJSON(value, opts)
 					local indent2 = indent..opts.indent
 					for i,kv in ipairs(keyvals) do
 						local k,v = kv[1], kv[2]
-						local oneLine = k..colonN..build(v,'')
+						local oneLine = k..colonN..build(v, '', opts.forceFloats or floatsForcedForKey[k])
 						if opts.wrap==false or #oneLine<=opts.wrap or not v or type(v)~='table' then
 							keyvals[i] = oneLine
 						else
-							keyvals[i] = k..colonN..build(v,indent2):gsub('^%s+','',1)
+							keyvals[i] = k..colonN..build(v, indent2, opts.forceFloats or floatsForcedForKey[k]):gsub('^%s+','',1)
 						end
 					end
 					return indent..'{\n'..table.concat(keyvals, ',\n')..'\n'..(opts.indentLast and indent2 or indent)..'}'
@@ -163,10 +176,10 @@ local function neatJSON(value, opts)
 		end
 	end
 
-	-- indexed by object, then by indent level
+	-- indexed by object, then by indent level, then by floatsForced
 	local function memoize()
 		local memo = setmetatable({},{_mode='k'})
-		return function(o,indent)
+		return function(o, indent, floatsForced)
 			if o==nil then
 				return indent..(opts.lua and 'nil' or 'null')
 			elseif o~=o then --test for NaN
@@ -181,15 +194,21 @@ local function neatJSON(value, opts)
 				byIndent = setmetatable({},{_mode='k'})
 				memo[o] = byIndent
 			end
-			if not byIndent[indent] then
-				byIndent[indent] = rawBuild(o,indent)
+			local byFloatForce = byIndent[indent]
+			if not byFloatForce then
+				byFloatForce = setmetatable({},{_mode='k'})
+				byIndent[indent] = byFloatForce
 			end
-			return byIndent[indent]
+			floatsForced = not not floatsForced -- convert nil to false
+			if not byFloatForce[floatsForced] then
+				byFloatForce[floatsForced] = rawBuild(o, indent, floatsForced)
+			end
+			return byFloatForce[floatsForced]
 		end
 	end
 
 	build = memoize()
-	return build(value,'')
+	return build(value, '', opts.forceFloats)
 end
 
 return neatJSON

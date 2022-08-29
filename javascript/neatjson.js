@@ -16,27 +16,29 @@ function neatJSON(value,opts){
 	if (!('afterColon1'   in opts)) opts.afterColon1   = ('aroundColon1' in opts) ? opts.aroundColon1 : ('afterColon'  in opts) ? opts.afterColon  : 0;
 	if (!('beforeColonN'  in opts)) opts.beforeColonN  = ('aroundColonN' in opts) ? opts.aroundColonN : ('beforeColon' in opts) ? opts.beforeColon : 0;
 	if (!('afterColonN'   in opts)) opts.afterColonN   = ('aroundColonN' in opts) ? opts.aroundColonN : ('afterColon'  in opts) ? opts.afterColon  : 0;
+	if (!('forceFloatsIn' in opts)) opts.forceFloatsIn = [];
 
-	var apad   = repeat(' ',opts.arrayPadding),
-	    opad   = repeat(' ',opts.objectPadding),
-	    comma  = repeat(' ',opts.beforeComma)+','+repeat(' ',opts.afterComma),
-	    colon1 = repeat(' ',opts.beforeColon1)+':'+repeat(' ',opts.afterColon1),
-	    colonN = repeat(' ',opts.beforeColonN)+':'+repeat(' ',opts.afterColonN);
+	const apad   = repeat(' ',opts.arrayPadding),
+	      opad   = repeat(' ',opts.objectPadding),
+	      comma  = repeat(' ',opts.beforeComma)+','+repeat(' ',opts.afterComma),
+	      colon1 = repeat(' ',opts.beforeColon1)+':'+repeat(' ',opts.afterColon1),
+	      colonN = repeat(' ',opts.beforeColonN)+':'+repeat(' ',opts.afterColonN);
 
-	var build = memoize();
-	return build(value,'');
+	const build = memoize();
+	return build(value,'',opts.forceFloats);
 
 	function memoize(){
-		var memo = new Map;
-		return function(o,indent){
-			var byIndent=memo.get(o);
-			if (!byIndent) memo.set(o,byIndent={});
-			if (!byIndent[indent]) byIndent[indent] = rawBuild(o,indent);
+		const memo = new Map;
+		return function(o,indent,floatsForced){
+			const byFloats = floatsForced ? {o,floatsForced} : o;
+			let byIndent=memo.get(byFloats);
+			if (!byIndent) memo.set(byFloats,byIndent={});
+			if (!byIndent[indent]) byIndent[indent] = rawBuild(o,indent,floatsForced);
 			return byIndent[indent];
 		}
 	}
 
-	function rawBuild(o,indent){
+	function rawBuild(o,indent,floatsForced){
 		if (o===null || o===undefined) return indent+'null';
 		else{
 			if (typeof o==='number'){
@@ -47,66 +49,70 @@ function neatJSON(value,opts){
 				}else if (Number.isNaN(o)){
 					return indent+'"NaN"';
 				}else{
-					var isFloat = (o === +o && o !== (o|0));
-					return indent + ((isFloat && ('decimals' in opts)) ? o.toFixed(opts.decimals) : (o+''));
+					const treatAsFloat = floatsForced || (o === +o && o !== (o|0));
+					let result = indent + ((treatAsFloat && ('decimals' in opts)) ? o.toFixed(opts.decimals) : (o+''));
+					if (opts.trimTrailingZeros) result = (+result)+'';
+					if (floatsForced && result.indexOf('.')==-1) result += '.0';
+					return result;
 				}
 			}else if (o instanceof Array){
 				if (!o.length) return indent+"[]";
-				var pieces  = o.map(function(v){ return build(v,'') });
-				var oneLine = indent+'['+apad+pieces.join(comma)+apad+']';
+				let pieces = o.map(function(v){ return build(v,'',floatsForced) });
+				const oneLine = indent+'['+apad+pieces.join(comma)+apad+']';
 				if (opts.wrap===false || oneLine.length<=opts.wrap) return oneLine;
 				if (opts.short){
-					var indent2 = indent+' '+apad;
-					pieces = o.map(function(v){ return build(v,indent2) });
+					const indent2 = indent+' '+apad;
+					pieces = o.map(function(v){ return build(v,indent2,floatsForced) });
 					pieces[0] = pieces[0].replace(indent2,indent+'['+apad);
 					pieces[pieces.length-1] = pieces[pieces.length-1]+apad+']';
 					return pieces.join(',\n');
 				}else{
-					var indent2 = indent+opts.indent;
-					return indent+'[\n'+o.map(function(v){ return build(v,indent2) }).join(',\n')+'\n'+(opts.indentLast?indent2:indent)+']';
+					const indent2 = indent+opts.indent;
+					return indent+'[\n'+o.map(function(v){ return build(v,indent2,floatsForced) }).join(',\n')+'\n'+(opts.indentLast?indent2:indent)+']';
 				}
 			}else if (o instanceof Object){
-				var sortedKV=[],i=0;
-				var sort = opts.sort || opts.sorted;
-				for (var k in o){
-					var kv = sortedKV[i++] = [k,o[k]];
+				let sortedKV=[], i=0;
+				const sort = opts.sort || opts.sorted;
+				for (let k in o){
+					const kv = sortedKV[i++] = [k,o[k]];
 					if (sort===true) kv[2] = k;
 					else if (typeof sort==='function') kv[2]=sort(k,o[k],o);
 				}
 				if (!sortedKV.length) return indent+'{}';
 				if (sort) sortedKV = sortedKV.sort(function(a,b){ a=a[2]; b=b[2]; return a<b?-1:a>b?1:0 });
-				var keyvals=sortedKV.map(function(kv){ return [JSON.stringify(kv[0]), build(kv[1],'')].join(colon1) }).join(comma);
-				var oneLine = indent+"{"+opad+keyvals+opad+"}";
+				let keyvals=sortedKV.map(([k,v]) => [JSON.stringify(k), build(v,'',(opts.forceFloats || opts.forceFloatsIn.includes(k)))].join(colon1) ).join(comma);
+				const oneLine = indent+"{"+opad+keyvals+opad+"}";
 				if (opts.wrap===false || oneLine.length<opts.wrap) return oneLine;
 				if (opts.short){
 					keyvals = sortedKV.map(function(kv){ return [indent+' '+opad+JSON.stringify(kv[0]), kv[1]] });
 					keyvals[0][0] = keyvals[0][0].replace(indent+' ',indent+'{');
 					if (opts.aligned){
-						var longest = 0;
-						for (var i=keyvals.length;i--;) if (keyvals[i][0].length>longest) longest = keyvals[i][0].length;
-						var padding = repeat(' ',longest);
-						for (var i=keyvals.length;i--;) keyvals[i][0] = padRight(padding,keyvals[i][0]);
+						let longest = 0;
+						for (let i=keyvals.length;i--;) if (keyvals[i][0].length>longest) longest = keyvals[i][0].length;
+						const padding = repeat(' ',longest);
+						for (let i=keyvals.length;i--;) keyvals[i][0] = padRight(padding,keyvals[i][0]);
 					}
-					for (var i=keyvals.length;i--;){
-						var k=keyvals[i][0], v=keyvals[i][1];
-						var indent2 = repeat(' ',(k+colonN).length);
-						var oneLine = k+colonN+build(v,'');
-						keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colonN+build(v,indent2).replace(/^\s+/,''));
+					for (let i=keyvals.length;i--;){
+						let k=keyvals[i][0], v=keyvals[i][1];
+						const indent2 = repeat(' ',(k+colonN).length);
+						floatsForced = (opts.forceFloats || opts.forceFloatsIn.includes(k));
+						const oneLine = k+colonN+build(v,'',floatsForced);
+						keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colonN+build(v,indent2,floatsForced).replace(/^\s+/,''));
 					}
 					return keyvals.join(',\n') + opad + '}';
 				}else{
-					var keyvals=sortedKV.map(function(kvs){ kvs[0] = indent+opts.indent+JSON.stringify(kvs[0]); return kvs });
+					const keyvals=sortedKV.map(function(kvs){ kvs[0] = indent+opts.indent+JSON.stringify(kvs[0]); return kvs });
 					if (opts.aligned){
-						var longest = 0;
-						for (var i=keyvals.length;i--;) if (keyvals[i][0].length>longest) longest = keyvals[i][0].length;
-						var padding = repeat(' ',longest);
-						for (var i=keyvals.length;i--;) keyvals[i][0] = padRight(padding,keyvals[i][0]);
+						let longest = 0;
+						for (let i=keyvals.length;i--;) if (keyvals[i][0].length>longest) longest = keyvals[i][0].length;
+						const padding = repeat(' ',longest);
+						for (let i=keyvals.length;i--;) keyvals[i][0] = padRight(padding,keyvals[i][0]);
 					}
-					var indent2 = indent+opts.indent;
-					for (var i=keyvals.length;i--;){
-						var k=keyvals[i][0], v=keyvals[i][1];
-						var oneLine = k+colonN+build(v,'');
-						keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colonN+build(v,indent2).replace(/^\s+/,''));
+					const indent2 = indent+opts.indent;
+					for (let i=keyvals.length;i--;){
+						const k=keyvals[i][0], v=keyvals[i][1];
+						const oneLine = k+colonN+build(v,'',floatsForced);
+						keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colonN+build(v,indent2,floatsForced).replace(/^\s+/,''));
 					}
 					return indent+'{\n'+keyvals.join(',\n')+'\n'+(opts.indentLast?indent2:indent)+'}'
 				}
@@ -117,7 +123,7 @@ function neatJSON(value,opts){
 	}
 
 	function repeat(str,times){ // http://stackoverflow.com/a/17800645/405017
-		var result = '';
+		let result = '';
 		while(true){
 			if (times & 1) result += str;
 			times >>= 1;
@@ -131,6 +137,6 @@ function neatJSON(value,opts){
 		return (str + pad).substring(0, pad.length);
 	}
 }
-neatJSON.version = "0.9";
+neatJSON.version = "0.10";
 
 })(typeof exports === 'undefined' ? this : exports);

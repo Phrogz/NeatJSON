@@ -14,6 +14,9 @@ return {
 	{value=5.0001, tests={
 		{json="5.0001"},
 		{json="5.000", opts={decimals=3}},
+		{json="5",     opts={decimals=3, trimTrailingZeros=true}},
+		{json="5.0",   opts={decimals=3, trimTrailingZeros=true, forceFloats=true}},
+		{json="5.000", opts={decimals=3, trimTrailingZeros=false, forceFloats=true}},
 	}},
 	{value=4.2, tests={
 		{json="4.2"},
@@ -181,5 +184,33 @@ return {
 	{value={inf=1/0, neginf=-1/0, nan=0/0}, tests={
 		{ json='{"inf":9e9999,"nan":"NaN","neginf":-9e9999}', opts={sort=true} },
 		{ json='{inf=1/0,nan=0/0,neginf=-1/0}', opts={sort=true, lua=true} },
-	}}
+	}},
+
+	{value={0, 1, 1.1, 1.555555}, tests={
+		{ json='[0,1,1.1,1.555555]', opts={forceFloats=false} },
+		{ json='[0.0,1.0,1.1,1.555555]', opts={forceFloats=true} },
+		{ json='[0.000,1.000,1.100,1.556]', opts={forceFloats=true, decimals=3} },
+		{ json='[0.0,1.0,1.1,1.556]', opts={forceFloats=true, decimals=3, trimTrailingZeros=true} },
+		{ json='[0,1,1.1,1.556]', opts={forceFloats=false, decimals=3, trimTrailingZeros=true} },
+	}},
+
+	{value={floats={0, 1, 0.1, 1.555555}, raw={0, 1, 0.1, 1.555555}}, tests={
+		{ json='{"floats":[0,1,0.1,1.555555],"raw":[0,1,0.1,1.555555]}', opts={forceFloats=false, sort=true} },
+		{ json='{"floats":[0.0,1.0,0.1,1.555555],"raw":[0.0,1.0,0.1,1.555555]}', opts={forceFloats=true, sort=true} },
+		{ json='{"floats":[0.0,1.0,0.1,1.555555],"raw":[0,1,0.1,1.555555]}', opts={forceFloatsIn={'floats'}, sort=true} },
+
+		{ json='{"floats":[0,1,0.100,1.556],"raw":[0,1,0.100,1.556]}', opts={forceFloats=false, decimals=3, sort=true} },
+		{ json='{"floats":[0.000,1.000,0.100,1.556],"raw":[0.000,1.000,0.100,1.556]}', opts={forceFloats=true, decimals=3, sort=true} },
+		{ json='{"floats":[0.000,1.000,0.100,1.556],"raw":[0,1,0.100,1.556]}', opts={forceFloatsIn={'floats'}, decimals=3, sort=true} },
+
+		{ json='{"floats":[0,1,0.1,1.556],"raw":[0,1,0.1,1.556]}', opts={forceFloats=false, decimals=3, trimTrailingZeros=true, sort=true} },
+		{ json='{"floats":[0.0,1.0,0.1,1.556],"raw":[0.0,1.0,0.1,1.556]}', opts={forceFloats=true, decimals=3, trimTrailingZeros=true, sort=true} },
+		{ json='{"floats":[0.0,1.0,0.1,1.556],"raw":[0,1,0.1,1.556]}', opts={forceFloatsIn={'floats'}, decimals=3, trimTrailingZeros=true, sort=true} },
+	}},
+
+	-- {value={1,2,3,{a={4,5,{a=6, b=7}}, b={8,9,{a=10, b=11}}}}, tests={
+	-- 	{ json='[1,2,3,{"a":[4,5,{"a":6,"b":7}],"b":[8,9,{"a":10,"b":11}]}]', opts={} },
+	-- 	{ json='[1.0,2.0,3.0,{"a":[4.0,5.0,{"a":6.0,"b":7.0}],"b":[8.0,9.0,{"a":10.0,"b":11.0}]}]', opts={forceFloats=true, wrap=false} },
+	-- 	{ json='[1,2,3,{"a":[4.0,5.0,{"a":6.0,"b":7}],"b":[8,9,{"a":10.0,"b":11}]}]', opts={forceFloatsIn={'a'}, wrap=false} },
+	-- }},
 }

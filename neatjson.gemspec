@@ -2,7 +2,7 @@
 require 'date'
 Gem::Specification.new do |s|
 	s.name          = "neatjson"
-	s.version       = "0.9"
+	s.version       = "0.10"
 	s.date          = Date.today.iso8601
 	s.authors       = ["Gavin Kistner"]
 	s.email         = "gavin@phrogz.net"

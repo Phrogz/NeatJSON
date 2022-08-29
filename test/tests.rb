@@ -13,6 +13,8 @@ TESTS = [
 	{value:5.0001, tests:[
 		{json:"5.0001"},
 		{json:"5.000", opts:{decimals:3}},
+		{json:"5.0",   opts:{decimals:3, trim_trailing_zeros:true, force_floats:true}},
+		{json:"5.000", opts:{decimals:3, trim_trailing_zeros:false, force_floats:true}},
 	]},
 	{value:4.2, tests:[
 		{json:"4.2"},
@@ -187,6 +189,34 @@ TESTS = [
 
 	{value:{inf:1.0/0, neginf:-1.0/0, nan:0.0/0}, tests:[
 		{ json:'{"inf":9e9999,"nan":"NaN","neginf":-9e9999}', opts:{sort:true} },
+	]},
+
+	{value:[0, 1, 1.1, 1.555555], tests:[
+		{ json:'[0,1,1.1,1.555555]', opts:{force_floats:false} },
+		{ json:'[0.0,1.0,1.1,1.555555]', opts:{force_floats:true} },
+		{ json:'[0.000,1.000,1.100,1.556]', opts:{force_floats:true, decimals:3} },
+		{ json:'[0.0,1.0,1.1,1.556]', opts:{force_floats:true, decimals:3, trim_trailing_zeros:true} },
+		{ json:'[0,1,1.1,1.556]', opts:{force_floats:false, decimals:3, trim_trailing_zeros:true} },
+	]},
+
+	{value:{floats:[0, 1, 0.1, 1.555555], raw:[0, 1, 0.1, 1.555555]}, tests:[
+		{ json:'{"floats":[0,1,0.1,1.555555],"raw":[0,1,0.1,1.555555]}', opts:{force_floats:false} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.555555],"raw":[0.0,1.0,0.1,1.555555]}', opts:{force_floats:true} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.555555],"raw":[0,1,0.1,1.555555]}', opts:{force_floats_in:['floats']} },
+
+		{ json:'{"floats":[0,1,0.100,1.556],"raw":[0,1,0.100,1.556]}', opts:{force_floats:false, decimals:3} },
+		{ json:'{"floats":[0.000,1.000,0.100,1.556],"raw":[0.000,1.000,0.100,1.556]}', opts:{force_floats:true, decimals:3} },
+		{ json:'{"floats":[0.000,1.000,0.100,1.556],"raw":[0,1,0.100,1.556]}', opts:{force_floats_in:['floats'], decimals:3} },
+
+		{ json:'{"floats":[0,1,0.1,1.556],"raw":[0,1,0.1,1.556]}', opts:{force_floats:false, decimals:3, trim_trailing_zeros:true} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.556],"raw":[0.0,1.0,0.1,1.556]}', opts:{force_floats:true, decimals:3, trim_trailing_zeros:true} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.556],"raw":[0,1,0.1,1.556]}', opts:{force_floats_in:['floats'], decimals:3, trim_trailing_zeros:true} },
+	]},
+
+	{value:[1,2,3,{a:[4,5,{a:6, b:7}], b:[8,9,{a:10, b:11}]}], tests:[
+		{ json:'[1,2,3,{"a":[4,5,{"a":6,"b":7}],"b":[8,9,{"a":10,"b":11}]}]', opts:{} },
+		{ json:'[1.0,2.0,3.0,{"a":[4.0,5.0,{"a":6.0,"b":7.0}],"b":[8.0,9.0,{"a":10.0,"b":11.0}]}]', opts:{force_floats:true, wrap:false} },
+		{ json:'[1,2,3,{"a":[4.0,5.0,{"a":6.0,"b":7}],"b":[8,9,{"a":10.0,"b":11}]}]', opts:{force_floats_in:['a'], wrap:false} },
 	]},
 ]
 
