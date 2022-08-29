@@ -203,6 +203,14 @@ exports.tests = [
 		{ json:'[1,2,3,{"a":[4.0,5.0,{"a":6.0,"b":7}],"b":[8,9,{"a":10.0,"b":11}]}]', opts:{forceFloatsIn:['a'], wrap:false} },
 	]},
 
+	{value:[1,2,3, {bar:[4,5,6], foo:[7,8,9]}], tests:[
+		{ json:'[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7,8,9]\n\t}\n]', opts:{wrap:20, indent:"\t"} },
+		{ json:'[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7,8,9]\n\t}\n]', opts:{wrap:20, indent:"\t", forceFloatsIn:['bar']} },
+		{ json:'[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts:{wrap:20, indent:"\t", forceFloatsIn:['foo']} },
+		{ json:'[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts:{wrap:20, indent:"\t", forceFloatsIn:['foo', 'bar']} },
+		{ json:'[\n\t1.0,\n\t2.0,\n\t3.0,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts:{wrap:20, indent:"\t", forceFloats:true} },
+	]},
+
 	// {value:Class.new{ def to_json(*a); {a:1}.to_json(*a); end }.new, tests:[
 	// 	{ json:'{  "a":1}' },
 	// 	{ json:'{  "a":1}', opts:{wrap:true} },

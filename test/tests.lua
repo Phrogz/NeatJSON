@@ -208,9 +208,18 @@ return {
 		{ json='{"floats":[0.0,1.0,0.1,1.556],"raw":[0,1,0.1,1.556]}', opts={forceFloatsIn={'floats'}, decimals=3, trimTrailingZeros=true, sort=true} },
 	}},
 
-	-- {value={1,2,3,{a={4,5,{a=6, b=7}}, b={8,9,{a=10, b=11}}}}, tests={
-	-- 	{ json='[1,2,3,{"a":[4,5,{"a":6,"b":7}],"b":[8,9,{"a":10,"b":11}]}]', opts={} },
-	-- 	{ json='[1.0,2.0,3.0,{"a":[4.0,5.0,{"a":6.0,"b":7.0}],"b":[8.0,9.0,{"a":10.0,"b":11.0}]}]', opts={forceFloats=true, wrap=false} },
-	-- 	{ json='[1,2,3,{"a":[4.0,5.0,{"a":6.0,"b":7}],"b":[8,9,{"a":10.0,"b":11}]}]', opts={forceFloatsIn={'a'}, wrap=false} },
-	-- }},
+	{value={1,2,3,{a={4,5,{a=6, b=7}}, b={8,9,{a=10, b=11}}}}, tests={
+		{ json='[1,2,3,{"a":[4,5,{"a":6,"b":7}],"b":[8,9,{"a":10,"b":11}]}]', opts={sort=true} },
+		{ json='[1.0,2.0,3.0,{"a":[4.0,5.0,{"a":6.0,"b":7.0}],"b":[8.0,9.0,{"a":10.0,"b":11.0}]}]', opts={forceFloats=true, wrap=false, sort=true} },
+		{ json='[1,2,3,{"a":[4.0,5.0,{"a":6.0,"b":7}],"b":[8,9,{"a":10.0,"b":11}]}]', opts={forceFloatsIn={'a'}, wrap=false, sort=true} },
+	}},
+
+	{value={1,2,3, {bar={4,5,6}, foo={7,8,9}}}, tests={
+		{ json='[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7,8,9]\n\t}\n]', opts={wrap=30, sort=true, indent="\t"} },
+		{ json='[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7,8,9]\n\t}\n]', opts={wrap=30, sort=true, indent="\t", forceFloatsIn={'bar'}} },
+		{ json='[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts={wrap=30, sort=true, indent="\t", forceFloatsIn={'foo'}} },
+		{ json='[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts={wrap=30, sort=true, indent="\t", forceFloatsIn={'foo', 'bar'}} },
+		{ json='[\n\t1.0,\n\t2.0,\n\t3.0,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts={wrap=30, sort=true, indent="\t", forceFloats=true} },
+	}},
+
 }

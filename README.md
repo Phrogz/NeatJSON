@@ -278,6 +278,15 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## HISTORY
 
+* **v0.10.1** — August 29, 2022
+  * Fix bugs found when `force_floats_in` was combined with wrapping.
+  * Update interactive HTML tool to support new features.
+
+* **v0.10** — August 29, 2022
+  * Add `force_floats` and `force_floats_in` to support serialization for non-standard parsers that differentiate between integers and floats.
+  * Add `trim_trailing_zeros` option to convert the `decimals` output from e.g. `5.40000` to `5.4`.
+  * Convert JavaScript version to require ECMAScript 6 for performance.
+
 * **v0.10** — August 29, 2022
   * Add `force_floats` and `force_floats_in` to support serialization for non-standard parsers that differentiate between integers and floats.
   * Add `trim_trailing_zeros` option to convert the `decimals` output from e.g. `5.40000` to `5.4`.

@@ -118,7 +118,7 @@ module JSON
 								when 3 then o.sort_by{ |k,v| sort[k,v,o] }
 								end
 						end
-						keys = o.map{|x| x.first.to_s }
+						keys = o.map{ |x| x.first.to_s }
 						keyvals = o.map.with_index{ |(k,v),i| [ k.to_s.inspect, build[v, '', opts[:force_floats] || opts[:force_floats_in].include?(keys[i])] ] }
 						keyvals = keyvals.map{ |kv| kv.join(colon1) }.join(comma)
 						one_line = "#{indent}{#{opad}#{keyvals}#{opad}}"
@@ -152,7 +152,8 @@ module JSON
 									keyvals.map!{ |k,v| [ formatk % k,v] }
 								end
 								indent2 = "#{indent}#{opts[:indent]}"
-								keyvals.map! do |k,v|
+								keyvals.map!.with_index do |(k,v),i|
+									floats_forced = opts[:force_floats] || opts[:force_floats_in].include?(keys[i])
 									one_line = "#{k}#{colonn}#{build[v, '', floats_forced]}"
 									if opts[:wrap] && (one_line.length > opts[:wrap]) && (v.is_a?(Array) || v.is_a?(Hash))
 										"#{k}#{colonn}#{build[v, indent2, floats_forced].lstrip}"

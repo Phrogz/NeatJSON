@@ -218,5 +218,13 @@ TESTS = [
 		{ json:'[1.0,2.0,3.0,{"a":[4.0,5.0,{"a":6.0,"b":7.0}],"b":[8.0,9.0,{"a":10.0,"b":11.0}]}]', opts:{force_floats:true, wrap:false} },
 		{ json:'[1,2,3,{"a":[4.0,5.0,{"a":6.0,"b":7}],"b":[8,9,{"a":10.0,"b":11}]}]', opts:{force_floats_in:['a'], wrap:false} },
 	]},
+
+	{value:[1,2,3, {bar:[4,5,6], foo:[7,8,9]}], tests:[
+		{ json:%Q{[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7,8,9]\n\t}\n]}, opts:{wrap:20, indent:"\t"} },
+		{ json:%Q{[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7,8,9]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats_in:["bar"]} },
+		{ json:%Q{[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats_in:["foo"]} },
+		{ json:%Q{[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats_in:["foo", "bar"]} },
+		{ json:%Q{[\n\t1.0,\n\t2.0,\n\t3.0,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats:true} },
+	]},
 ]
 

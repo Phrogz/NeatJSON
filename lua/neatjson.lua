@@ -131,11 +131,12 @@ local function neatJSON(value, opts)
 					for i,kv in ipairs(keyvals) do
 						local k,v = kv[1], kv[2]
 						local indent2 = string.rep(' ',#(k..colonN))
-						local oneLine = k..colonN..build(v, '', opts.forceFloats or floatsForcedForKey[k])
+						floatsForced = opts.forceFloats or floatsForcedForKey[sortedKV[i][1]]
+						local oneLine = k..colonN..build(v, '', floatsForced)
 						if opts.wrap==false or #oneLine<=opts.wrap or not v or type(v)~='table' then
 							keyvals[i] = oneLine
 						else
-							keyvals[i] = k..colonN..build(v, indent2, opts.forceFloats or floatsForcedForKey[k]):gsub('^%s+','',1)
+							keyvals[i] = k..colonN..build(v, indent2, floatsForced):gsub('^%s+','',1)
 						end
 					end
 					return table.concat(keyvals, ',\n')..opad..'}'
@@ -162,12 +163,13 @@ local function neatJSON(value, opts)
 					end
 					local indent2 = indent..opts.indent
 					for i,kv in ipairs(keyvals) do
+						floatsForced = opts.forceFloats or floatsForcedForKey[sortedKV[i][1]]
 						local k,v = kv[1], kv[2]
-						local oneLine = k..colonN..build(v, '', opts.forceFloats or floatsForcedForKey[k])
+						local oneLine = k..colonN..build(v, '', floatsForced)
 						if opts.wrap==false or #oneLine<=opts.wrap or not v or type(v)~='table' then
 							keyvals[i] = oneLine
 						else
-							keyvals[i] = k..colonN..build(v, indent2, opts.forceFloats or floatsForcedForKey[k]):gsub('^%s+','',1)
+							keyvals[i] = k..colonN..build(v, indent2, floatsForced):gsub('^%s+','',1)
 						end
 					end
 					return indent..'{\n'..table.concat(keyvals, ',\n')..'\n'..(opts.indentLast and indent2 or indent)..'}'

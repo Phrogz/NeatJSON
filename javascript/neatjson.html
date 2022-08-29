@@ -26,25 +26,30 @@
 <p id="description">NeatJSON provides a <a href="https://rubygems.org/gems/neatjson">Ruby library</a>, <a href="https://github.com/Phrogz/NeatJSON/blob/master/javascript/neatjson.js">JavaScript library</a>, and <a href="https://github.com/Phrogz/NeatJSON/blob/master/javascript/neatjson.js">Lua library</a> for formatting values as JSON strings. To test it out, paste your JSON (formatted however) into the top box below, adjust the formatting options, and see the results at the bottom.</p>
 <div id="options">
 	<div class="option-row">
-		<span class="option">
-			<label title="Limit the number of decimals displayed?"><input type="checkbox" id="useDecimals"> Format Decimals?</label>
-			<input type="text" id="decimals" value="3" size="3" min="0" max="10" style="display:none">
-		</span>
 		<span class="option" title="Use alphabetical ordering for object keys?"><label><input type="checkbox" id="sorted"> Sort Keys?</label></span>
 		<span class="option">
 			<label title="Force line wrapping?"><input type="checkbox" id="wrap" checked> Wrap?</label>
 			<label id="wrapopts1" title="Column width to wrap at (without breaking values).">width <input type="text" id="wrapSize" value="40" size="3"></label>
 			<label id="wrapopts3" title="Line up colons on multi-line objects?"><input type="checkbox" id="aligned" checked> Align Values?</label>
-			<label id="wrapopts2" title="Put opening/closing brackets on the same line as data?"><input type="checkbox" id="short" checked> Short?</label>
+			<label id="wrapopts2" title="Put opening/closing brackets on the same line as data?"><input type="checkbox" id="short"> Short?</label>
 			<span class="option" id="wrapopts4">
 				<label title="Use tabs instead of spaces at the start of lines?"><input type="checkbox" id="tabs"> Use Tabs?</label>
 				<label title="Number of tabs/spaces to use">Indent <input type="range" id="indent" value="2" min="0" max="7" step="1"></label>
 			</span>
 			<label id="wrapopts5" title="Indent the closing bracket/brace for arrays and objects?"><input type="checkbox" id="indentlast"> Indent Last?</label>
-		</span>
 	</div><div class="option-row">
-		<span class="option" title="Number of spaces inside array brackets on a single line."><label>Array Padding  <input type="range" id="arrayPadding"  value="1" min="0" max="5" step="1"></label></span>
-		<span class="option" title="Number of spaces inside object braces on a single line." ><label>Object Padding <input type="range" id="objectPadding" value="1" min="0" max="5" step="1"></label></span>
+		<span class="option">
+			<label title="Limit the number of decimals displayed?"><input type="checkbox" id="useDecimals"> Format Decimals?</label>
+			<input type="number" id="decimals" value="3" size="2" min="0" max="10" step="1" style="display:none">
+		</span>
+		<span class="option" id="trimzerowrap" style="display:none"><label title="Remove trailing zeros from the ends of decimals?"><input type="checkbox" checked id="trimzeros"> Trim Trailing Zeros?</label></span>
+		<span class="option"><label title="Require every number output to have a at least one decimal?"><input type="checkbox" id="forceFloats"> Force Floats Everywhere?</label></span>
+		<span class="option" id="forceFloatsWrapper"><label title="A list of object names, separated by commas, under which to force integer values to have one decimal.">
+			Force Floats For: <input type="text" id="forceFloatsIn">
+		</label></span>
+	</div><div class="option-row">
+		<span class="option" title="Number of spaces inside array brackets on a single line."><label>Array Padding  <input type="range" id="arrayPadding"  value="0" min="0" max="5" step="1"></label></span>
+		<span class="option" title="Number of spaces inside object braces on a single line." ><label>Object Padding <input type="range" id="objectPadding" value="0" min="0" max="5" step="1"></label></span>
 		<span class="option" title="Number of spaces before commas (for single-line arrays and objects)."><label>Before Comma <input type="range" id="beforeComma" value="0" min="0" max="5" step="1"></label></span>
 		<span class="option" title="Number of spaces after commas (for single-line arrays and objects)." ><label>After Comma  <input type="range" id="afterComma"  value="1" min="0" max="5" step="1"></label></span>
 	</div><div class="option-row">
@@ -58,7 +63,7 @@
 <textarea id="input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">["foo","bar",{"dogs":42,"piggies":0,"cats":7},{"jimmy":[1,2,3,4,5],"jammy":3.14159265358979,"hot":"pajammy"}]</textarea>
 <pre id="code"></pre>
 <textarea id="output" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
-<div id="copyright">NeatJSON is copyright ©2015–2019 Gavin Kistner. Available under the <a href="https://raw.githubusercontent.com/Phrogz/NeatJSON/master/LICENSE.txt">MIT License</a>. For feature requests and bug reports please use the <a href="https://github.com/Phrogz/NeatJSON/issues">GitHub Issues</a> page.</div>
+<div id="copyright">NeatJSON is copyright ©2015–2022 Gavin Kistner. Available under the <a href="https://raw.githubusercontent.com/Phrogz/NeatJSON/master/LICENSE.txt">MIT License</a>. For feature requests and bug reports please use the <a href="https://github.com/Phrogz/NeatJSON/issues">GitHub Issues</a> page.</div>
 <script type="text/javascript" src="neatjson.js"></script>
 <script type="text/javascript">
 	document.querySelector('h1').innerHTML += " v"+neatJSON.version;
@@ -79,6 +84,7 @@
 	    shrt = document.querySelector('#short'),
 	    dec0 = document.querySelector('#useDecimals'),
 	    decN = document.querySelector('#decimals'),
+			trim = document.querySelector('#trimzerowrap'),
 	    sort = document.querySelector('#sorted'),
 	    algn = document.querySelector('#aligned'),
 	    tabs = document.querySelector('#tabs'),
@@ -148,13 +154,23 @@
 
 		if (dec0.checked){
 			opts.decimals = decN.value*1;
-			decN.style.display = '';
+			trim.style.display = decN.style.display = '';
+			if (trimzeros.checked) opts.trimTrailingZeros = true;
 		}else{
-			decN.style.display = 'none';
+			trim.style.display = decN.style.display = 'none';
 		}
 
 		if (sort.checked) opts.sort = true;
 		if (wrap.checked && algn.checked) opts.aligned = true;
+
+		if (forceFloats.checked) {
+			opts.forceFloats = true;
+		} else if (forceFloatsIn.value) {
+			var values = forceFloatsIn.value.split(',').filter( w => w && (w!=',') );
+			if (values.length) opts.forceFloatsIn = values;
+		}
+		forceFloatsWrapper.style.display = forceFloats.checked ? 'none' : '';
+
 
 		if (arrayPadding.value!=0 && objectPadding.value==arrayPadding.value){
 			opts.padding = arrayPadding.value*1;

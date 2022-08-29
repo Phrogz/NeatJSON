@@ -1,6 +1,6 @@
 {
   "name": "neatjson",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Pretty, powerful, flexible JSON generation.",
   "main": "./javascript/neatjson.js",
   "directories": {

@@ -80,7 +80,8 @@ function neatJSON(value,opts){
 				}
 				if (!sortedKV.length) return indent+'{}';
 				if (sort) sortedKV = sortedKV.sort(function(a,b){ a=a[2]; b=b[2]; return a<b?-1:a>b?1:0 });
-				let keyvals=sortedKV.map(([k,v]) => [JSON.stringify(k), build(v,'',(opts.forceFloats || opts.forceFloatsIn.includes(k)))].join(colon1) ).join(comma);
+				const sortedKeys = sortedKV.map(([k]) => k);
+				let keyvals=sortedKV.map(([k,v],i) => [JSON.stringify(k), build(v,'',(opts.forceFloats || opts.forceFloatsIn.includes(k)))].join(colon1) ).join(comma);
 				const oneLine = indent+"{"+opad+keyvals+opad+"}";
 				if (opts.wrap===false || oneLine.length<opts.wrap) return oneLine;
 				if (opts.short){
@@ -95,7 +96,7 @@ function neatJSON(value,opts){
 					for (let i=keyvals.length;i--;){
 						let k=keyvals[i][0], v=keyvals[i][1];
 						const indent2 = repeat(' ',(k+colonN).length);
-						floatsForced = (opts.forceFloats || opts.forceFloatsIn.includes(k));
+						floatsForced = (opts.forceFloats || opts.forceFloatsIn.includes(sortedKeys[i]));
 						const oneLine = k+colonN+build(v,'',floatsForced);
 						keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colonN+build(v,indent2,floatsForced).replace(/^\s+/,''));
 					}
@@ -111,6 +112,7 @@ function neatJSON(value,opts){
 					const indent2 = indent+opts.indent;
 					for (let i=keyvals.length;i--;){
 						const k=keyvals[i][0], v=keyvals[i][1];
+						floatsForced = opts.forceFloats || opts.forceFloatsIn.includes(sortedKeys[i]);
 						const oneLine = k+colonN+build(v,'',floatsForced);
 						keyvals[i] = (opts.wrap===false || oneLine.length<=opts.wrap || !v || typeof v!="object") ? oneLine : (k+colonN+build(v,indent2,floatsForced).replace(/^\s+/,''));
 					}
@@ -137,6 +139,6 @@ function neatJSON(value,opts){
 		return (str + pad).substring(0, pad.length);
 	}
 }
-neatJSON.version = "0.10";
+neatJSON.version = "0.10.1";
 
 })(typeof exports === 'undefined' ? this : exports);
