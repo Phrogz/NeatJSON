@@ -23,7 +23,7 @@
 </head><body>
 <h1>NeatJSON Online</h1>
 <div id="content">
-<p id="description">NeatJSON provides a <a href="https://rubygems.org/gems/neatjson">Ruby library</a>, <a href="https://github.com/Phrogz/NeatJSON/blob/master/javascript/neatjson.js">JavaScript library</a>, and <a href="https://github.com/Phrogz/NeatJSON/blob/master/javascript/neatjson.js">Lua library</a> for formatting values as JSON strings. To test it out, paste your JSON (formatted however) into the top box below, adjust the formatting options, and see the results at the bottom.</p>
+<p id="description">NeatJSON provides a <a href="https://rubygems.org/gems/neatjson">Ruby library</a>, <a href="https://www.npmjs.com/package/neatjson">JavaScript library</a>, and <a href="https://github.com/Phrogz/NeatJSON/blob/master/lua/neatjson.lua">Lua library</a> for formatting values as JSON strings. To test it out, paste your JSON (formatted however) into the top box below, adjust the formatting options, and see the results at the bottom.</p>
 <div id="options">
 	<div class="option-row">
 		<span class="option" title="Use alphabetical ordering for object keys?"><label><input type="checkbox" id="sorted"> Sort Keys?</label></span>
@@ -44,7 +44,7 @@
 		</span>
 		<span class="option" id="trimzerowrap" style="display:none"><label title="Remove trailing zeros from the ends of decimals?"><input type="checkbox" checked id="trimzeros"> Trim Trailing Zeros?</label></span>
 		<span class="option"><label title="Require every number output to have a at least one decimal?"><input type="checkbox" id="forceFloats"> Force Floats Everywhere?</label></span>
-		<span class="option" id="forceFloatsWrapper"><label title="A list of object names, separated by commas, under which to force integer values to have one decimal.">
+		<span class="option" id="forceFloatsWrapper"><label title="A list of object key names, separated by commas, under which to force integer values to have one decimal.">
 			Force Floats For: <input type="text" id="forceFloatsIn">
 		</label></span>
 	</div><div class="option-row">

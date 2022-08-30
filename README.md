@@ -7,8 +7,9 @@ Pretty-print your JSON in Ruby or JavaScript or Lua with more power than is prov
 
 **Features (all optional):**
 
-* Keep values on one line, with variable wrap width.
-* Format numeric values to specified precision.
+* Keep multiple values on one line, with variable wrap width.
+* Format numeric values to specified decimal precision.
+  * Optionally force specific keys to use floating point representation instead of bare integers for whole number values (e.g. `42.0` instead of `42`).
 * Sort object keys to be in alphabetical order.
 * Arbitrary whitespace (or really, any string) for indentation.
 * "Short" wrapping uses fewer lines, indentation based on values. (See last example below.)
