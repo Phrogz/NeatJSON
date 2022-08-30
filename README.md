@@ -5,8 +5,10 @@
 
 Pretty-print your JSON in Ruby or JavaScript or Lua with more power than is provided by `JSON.pretty_generate` (Ruby) or `JSON.stringify` (JS). For example, like Ruby's `pp` (pretty print), NeatJSON can keep objects on one line if they fit, but break them over multiple lines if needed.
 
-**Features (all optional):**
+**Features:**
 
+* [Online webpage](http://phrogz.net/JS/NeatJSON) for performing conversions and experimenting with options.
+  * _Modifying graphical options on the webpage also gives you the JS code you would need to call to get the same results._
 * Keep multiple values on one line, with variable wrap width.
 * Format numeric values to specified decimal precision.
   * Optionally force specific keys to use floating point representation instead of bare integers for whole number values (e.g. `42.0` instead of `42`).
@@ -17,7 +19,6 @@ Pretty-print your JSON in Ruby or JavaScript or Lua with more power than is prov
 * Adjust number of spaces inside array/object braces.
 * Adjust number of spaces before/after commas and colons (both for single- vs. multi-line).
 * Line up the values for an object across lines.
-* [Online webpage](http://phrogz.net/JS/NeatJSON) for conversions and experimenting with options.
 * [Lua only] Produce Lua table serialization.
 
 
