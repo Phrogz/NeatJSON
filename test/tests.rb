@@ -226,5 +226,17 @@ TESTS = [
 		{ json:%Q{[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats_in:["foo", "bar"]} },
 		{ json:%Q{[\n\t1.0,\n\t2.0,\n\t3.0,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats:true} },
 	]},
+
+	# Issue #32
+	{value:[1,2], tests:[
+		{ json:"[\n  1,\n  2\n]", opts:{wrap:true, decimals:3} },
+		{ json:"[\n  1,\n  2\n]", opts:{wrap:true, decimals:3, trim_trailing_zeros:true} },
+	]},
+
+	# Issue #33
+	{value:[1,2], tests:[
+		{ json:"[\n1,\n2\n]", opts:{wrap:true, indent:'', decimals:3, trim_trailing_zeros:true} },
+		{ json:"[1,\n 2]",    opts:{wrap:true, indent:'', decimals:3, trim_trailing_zeros:true, short:true} },
+	]},
 ]
 

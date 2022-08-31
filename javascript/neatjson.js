@@ -50,10 +50,10 @@ function neatJSON(value,opts){
 					return indent+'"NaN"';
 				}else{
 					const treatAsFloat = floatsForced || (o === +o && o !== (o|0));
-					let result = indent + ((treatAsFloat && ('decimals' in opts)) ? o.toFixed(opts.decimals) : (o+''));
+					let result = ((treatAsFloat && ('decimals' in opts)) ? o.toFixed(opts.decimals) : (o+''));
 					if (opts.trimTrailingZeros) result = (+result)+'';
 					if (floatsForced && result.indexOf('.')==-1) result += '.0';
-					return result;
+					return indent + result;
 				}
 			}else if (o instanceof Array){
 				if (!o.length) return indent+"[]";
@@ -139,6 +139,6 @@ function neatJSON(value,opts){
 		return (str + pad).substring(0, pad.length);
 	}
 }
-neatJSON.version = "0.10.1";
+neatJSON.version = "0.10.2";
 
 })(typeof exports === 'undefined' ? this : exports);

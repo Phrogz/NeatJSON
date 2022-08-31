@@ -211,15 +211,16 @@ exports.tests = [
 		{ json:'[\n\t1.0,\n\t2.0,\n\t3.0,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts:{wrap:20, indent:"\t", forceFloats:true} },
 	]},
 
-	// {value:Class.new{ def to_json(*a); {a:1}.to_json(*a); end }.new, tests:[
-	// 	{ json:'{  "a":1}' },
-	// 	{ json:'{  "a":1}', opts:{wrap:true} },
-	// 	{ json:'{"a":1}',   opts:{indent:''} },
-	// ]},
+	// Issue #32
+	{value:[1,2], tests:[
+		{ json:'[\n  1,\n  2\n]', opts:{wrap:true, decimals:3} },
+		{ json:'[\n  1,\n  2\n]', opts:{wrap:true, decimals:3, trimTrailingZeros:true} },
+	]},
 
-	// {value:Class.new{ def to_json(*a); JSON.neat_generate({a:1},*a); end }.new, tests:[
-	// 	{ json:'{"a":1}' },
-	// 	{ json:"{\n  \"a\":1\n}", opts:{wrap:true} }
-	// ]}
+	// Issue #33
+	{value:[1,2], tests:[
+		{ json:'[\n1,\n2\n]', opts:{wrap:true, indent:'', decimals:3, trimTrailingZeros:true} },
+		{ json:'[1,\n 2]',    opts:{wrap:true, indent:'', decimals:3, trimTrailingZeros:true, short:true} },
+	]},
 ]
 
