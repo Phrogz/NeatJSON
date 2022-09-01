@@ -178,17 +178,17 @@ You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON
 
 ~~~ ruby
 # Ruby
-json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon_n:2, indent_last:true
+json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon_n:2
 ~~~
 
 ~~~ js
 // JavaScript
-var json = neatJSON( myValue, { arrayPadding:1, afterComma:1, beforeColonN:2, indentLast:true } );
+var json = neatJSON( myValue, { arrayPadding:1, afterComma:1, beforeColonN:2 } );
 ~~~
 
 ~~~ lua
 -- Lua
-local json = neatJSON( myValue, { arrayPadding=1, afterComma=1, beforeColonN=2, indentLast=true } )
+local json = neatJSON( myValue, { arrayPadding=1, afterComma=1, beforeColonN=2 } )
 ~~~
 
 * `wrap`                — Maximum line width before wrapping. Use `false` to never wrap, `true` to always wrap. default:`80`
