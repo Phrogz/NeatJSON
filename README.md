@@ -289,11 +289,6 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
   * Add `trim_trailing_zeros` option to convert the `decimals` output from e.g. `5.40000` to `5.4`.
   * Convert JavaScript version to require ECMAScript 6 for performance.
 
-* **v0.10** — August 29, 2022
-  * Add `force_floats` and `force_floats_in` to support serialization for non-standard parsers that differentiate between integers and floats.
-  * Add `trim_trailing_zeros` option to convert the `decimals` output from e.g. `5.40000` to `5.4`.
-  * Convert JavaScript version to require ECMAScript 6 for performance.
-
 * **v0.9** — July 29, 2019
   * Add Lua version, serializing to both JSON and Lua table literals
   * All languages serialize Infinity/-Infinity to JSON as `9e9999` and `-9e9999`
