@@ -29,7 +29,7 @@ Pretty-print your JSON in Ruby or JavaScript or Lua with more power than is prov
 * [Examples](#examples)
 * [Options](#options)
 * [License & Contact](#license--contact)
-* [TODO/Known Limitations](#todo-aka-known-limitations)
+* [TODO (aka Known Limitations)](#todo-aka-known-limitations)
 * [History](#history)
 
 
@@ -278,7 +278,13 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 * Possibly allow "JSON5" output (legal identifiers unquoted, etc.)
 
 
-## HISTORY
+## History
+
+* **v0.10.4** — November 17, 2022
+  * Online tool shows input/output bytes
+
+* **v0.10.2** — August 31, 2022
+  * Fix bugs found in JavaScript version related to `trim_trailing_zeros`.
 
 * **v0.10.1** — August 29, 2022
   * Fix bugs found when `force_floats_in` was combined with wrapping.
