@@ -31,9 +31,17 @@ return {
 	{value=1e-9,  tests={{json={'^1%.0+e%-0*9$', '^1e%-0*9$'}}}},
 	{value=-2.4,  tests={{json="-2",   opts={decimals=0}}}},
 
-	{value="foo",       tests={{json="\"foo\""}}},
-	-- {value= :foo,       tests={{json="\"foo\""}}},
-	{value="foo\nbar",  tests={{json="\"foo\\nbar\""}}},
+	{value="foo",         tests={{json="\"foo\""}}},
+	{value="foo\nbar",    tests={{json="\"foo\\nbar\""}}},
+	{value="foo\tbar",    tests={{json="\"foo\\tbar\""}}},
+	{value="foo\rbar",    tests={{json="\"foo\\rbar\""}}},
+	{value="foo\bbar",    tests={{json="\"foo\\bbar\""}}},
+	{value="foo\fbar",    tests={{json="\"foo\\fbar\""}}},
+
+	{value="foo${no}bar", tests={{json="\"foo${no}bar\""}}},
+	{value="foo#{no}bar", tests={{json="\"foo#{no}bar\""}}},
+	{value="foo\\bar",    tests={{json="\"foo\\\\bar\""}}},
+	{value="foo/bar",     tests={{json="\"foo/bar\""}}},
 
 	{value={1,2,3,4,{5,6,7,{8,9,10},11,12}}, tests={
 		{ json="[1,2,3,4,[5,6,7,[8,9,10],11,12]]" },

@@ -62,8 +62,8 @@ module JSON
 		memoizer = {}
 		build = ->(o,indent,floats_forced) do
 			memoizer[[o,indent,floats_forced]] ||= case o
-				when String               then "#{indent}#{o.inspect}"
-				when Symbol               then "#{indent}#{o.to_s.inspect}"
+				when String               then "#{indent}#{self.generate(o)}"
+				when Symbol               then "#{indent}#{self.generate(o.to_s)}"
 				when TrueClass,FalseClass then "#{indent}#{o}"
 				when NilClass             then "#{indent}null"
 				when Integer
@@ -119,14 +119,14 @@ module JSON
 								end
 						end
 						keys = o.map{ |x| x.first.to_s }
-						keyvals = o.map.with_index{ |(k,v),i| [ k.to_s.inspect, build[v, '', opts[:force_floats] || opts[:force_floats_in].include?(keys[i])] ] }
+						keyvals = o.map.with_index{ |(k,v),i| [ self.generate(k.to_s), build[v, '', opts[:force_floats] || opts[:force_floats_in].include?(keys[i])] ] }
 						keyvals = keyvals.map{ |kv| kv.join(colon1) }.join(comma)
 						one_line = "#{indent}{#{opad}#{keyvals}#{opad}}"
 						if !opts[:wrap] || (one_line.length <= opts[:wrap])
 							one_line
 						else
 							if opts[:short]
-								keyvals = o.map{ |k,v| ["#{indent} #{opad}#{k.to_s.inspect}",v] }
+								keyvals = o.map{ |k,v| ["#{indent} #{opad}#{self.generate(k.to_s)}",v] }
 								keyvals[0][0] = keyvals[0][0].sub "#{indent} ", "#{indent}{"
 								if opts[:aligned]
 									longest = keyvals.map(&:first).map(&:length).max
@@ -145,7 +145,7 @@ module JSON
 								end
 								"#{keyvals.join(",\n")}#{opad}}"
 							else
-								keyvals = o.map{ |k,v| ["#{indent}#{opts[:indent]}#{k.to_s.inspect}",v] }
+								keyvals = o.map{ |k,v| ["#{indent}#{opts[:indent]}#{self.generate(k.to_s)}",v] }
 								if opts[:aligned]
 									longest = keyvals.map(&:first).map(&:length).max
 									formatk = "%-#{longest}s"

@@ -280,6 +280,9 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## History
 
+* **v0.10.5** — November 17, 2022
+  * Fix issue #21: Strings containing `#` get an invalid escape added (Ruby only)
+
 * **v0.10.4** — November 17, 2022
   * Online tool shows input/output bytes
 
