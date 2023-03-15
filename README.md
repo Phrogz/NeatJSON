@@ -211,14 +211,14 @@ json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon
 * `beforeComma`       — Number of spaces to put before commas (for both arrays and objects). default:`0`
 * `afterComma`        — Number of spaces to put after commas (for both arrays and objects). default:`0`
 * `aroundComma`       — Shorthand to set both `beforeComma` and `afterComma`. default:`0`
-* `beforeColon_1`     — Number of spaces before a colon when the object is on one line. default:`0`
-* `afterColon_1`      — Number of spaces after a colon when the object is on one line. default:`0`
+* `beforeColon1`      — Number of spaces before a colon when the object is on one line. default:`0`
+* `afterColon1`       — Number of spaces after a colon when the object is on one line. default:`0`
 * `beforeColonN`      — Number of spaces before a colon when the object is on multiple lines. default:`0`
 * `afterColonN`       — Number of spaces after a colon when the object is on multiple lines. default:`0`
-* `beforeColon`       — Shorthand to set both `beforeColon_1` and `beforeColonN`. default:`0`
-* `afterColon`        — Shorthand to set both `afterColon_1` and `afterColonN`. default:`0`
+* `beforeColon`       — Shorthand to set both `beforeColon1` and `beforeColonN`. default:`0`
+* `afterColon`        — Shorthand to set both `afterColon1` and `afterColonN`. default:`0`
 * `aroundColon`       — Shorthand to set both `beforeColon` and `afterColon`. default:`0`
-* `lua`                 — (Lua only) Output a Lua table literal instead of JSON? default:`false`
+* `lua`               — (Lua only) Output a Lua table literal instead of JSON? default:`false`
 * `emptyTablesAreObjects` — (Lua only) Should `{}` in Lua become a JSON object (`{}`) or JSON array (`[]`)? default:`false` (array)
 
 You may omit the 'value' and/or 'object' parameters in your `sort` lambda if desired. For example:
@@ -274,7 +274,7 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## TODO (aka Known Limitations)
 
-* Figure out the best way to play with custom objects that use `to_json` for their representation.
+* [Ruby] Figure out the best way to play with custom objects that use `to_json` for their representation.
 * Detect circular references.
 * Possibly allow "JSON5" output (legal identifiers unquoted, etc.)
 
