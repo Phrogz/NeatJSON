@@ -1,7 +1,6 @@
 # NeatJSON
 
 [![Gem Version](https://badge.fury.io/rb/neatjson.svg)](http://badge.fury.io/rb/neatjson)
-[![Gem Downloads](http://ruby-gem-downloads-badge.herokuapp.com/neatjson?type=total&color=brightgreen)](https://rubygems.org/gems/neatjson)
 
 Pretty-print your JSON in Ruby or JavaScript or Lua with more power than is provided by `JSON.pretty_generate` (Ruby) or `JSON.stringify` (JS). For example, like Ruby's `pp` (pretty print), NeatJSON can keep objects on one line if they fit, but break them over multiple lines if needed.
 
@@ -174,12 +173,9 @@ puts JSON.neat_generate( data, opts )
 
 
 ## Options
-You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript/Lua). **Note**: option names with underscores below use camelCase in JavaScript and Lua. For example:
+You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript/Lua).
 
-~~~ ruby
-# Ruby
-json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon_n:2
-~~~
+**Note**: camelCase option names below use snake_case in Ruby. For example:
 
 ~~~ js
 // JavaScript
@@ -191,32 +187,37 @@ var json = neatJSON( myValue, { arrayPadding:1, afterComma:1, beforeColonN:2 } )
 local json = neatJSON( myValue, { arrayPadding=1, afterComma=1, beforeColonN=2 } )
 ~~~
 
-* `wrap`                — Maximum line width before wrapping. Use `false` to never wrap, `true` to always wrap. default:`80`
-* `indent`              — Whitespace used to indent each level when wrapping. default:`"  "` (two spaces)
-* `indent_last`         — Indent the closing bracket/brace for arrays and objects? default:`false`
-* `short`               — Put opening brackets on the same line as the first value, closing brackets on the same line as the last? default:`false`
-  * _This causes the `indent` and `indent_last` options to be ignored, instead basing indentation on array and object padding._
-* `sort`                — Sort objects' keys in alphabetical order (`true`), or supply a lambda for custom sorting. default:`false`
+~~~ ruby
+# Ruby
+json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon_n:2
+~~~
+
+* `wrap`              — Maximum line width before wrapping. Use `false` to never wrap, `true` to always wrap. default:`80`
+* `indent`            — Whitespace used to indent each level when wrapping. default:`"  "` (two spaces)
+* `indentLast`        — Indent the closing bracket/brace for arrays and objects? default:`false`
+* `short`             — Put opening brackets on the same line as the first value, closing brackets on the same line as the last? default:`false`
+  * _This causes the `indent` and `indentLast` options to be ignored, instead basing indentation on array and object padding._
+* `sort`              — Sort objects' keys in alphabetical order (`true`), or supply a lambda for custom sorting. default:`false`
   * If you supply a lambda to the `sort` option, it will be passed three values: the (string) name of the key, the associated value, and the object being sorted, e.g. `{ sort:->(key,value,hash){ Float(value) rescue Float::MAX } }`
-* `aligned`             — When wrapping objects, line up the colons (per object)? default:`false`
-* `decimals`            — Decimal precision for non-integer numbers; use `false` to keep values precise. default:`false`
-* `trim_trailing_zeros` — Remove extra zeros at the end of floats, e.g. `1.2000` becomes `1.2`. default:`false`
-* `force_floats`        — Force every integer value written to the file to be a float, e.g. `12` becomes `12.0`. default:`false`
-* `force_floats_in`     — Specify an array of object key names under which all integer values are treated as floats.
-  For example, serializing `{a:[1, 2, {a:3, b:4}], c:{a:5, d:6}` with `force_floats_in:['a']` would produce `{"a":[1.0, 2.0, {"a":3.0, "b":4}], "c":{"a":5.0, "d":6}}`.
-* `array_padding`       — Number of spaces to put inside brackets for arrays. default:`0`
-* `object_padding`      — Number of spaces to put inside braces for objects.  default:`0`
-* `padding`             — Shorthand to set both `array_padding` and `object_padding`. default:`0`
-* `before_comma`        — Number of spaces to put before commas (for both arrays and objects). default:`0`
-* `after_comma`         — Number of spaces to put after commas (for both arrays and objects). default:`0`
-* `around_comma`        — Shorthand to set both `before_comma` and `after_comma`. default:`0`
-* `before_colon_1`      — Number of spaces before a colon when the object is on one line. default:`0`
-* `after_colon_1`       — Number of spaces after a colon when the object is on one line. default:`0`
-* `before_colon_n`      — Number of spaces before a colon when the object is on multiple lines. default:`0`
-* `after_colon_n`       — Number of spaces after a colon when the object is on multiple lines. default:`0`
-* `before_colon`        — Shorthand to set both `before_colon_1` and `before_colon_n`. default:`0`
-* `after_colon`         — Shorthand to set both `after_colon_1` and `after_colon_n`. default:`0`
-* `around_colon`        — Shorthand to set both `before_colon` and `after_colon`. default:`0`
+* `aligned`           — When wrapping objects, line up the colons (per object)? default:`false`
+* `decimals`          — Decimal precision for non-integer numbers; use `false` to keep values precise. default:`false`
+* `trimTrailingZeros` — Remove extra zeros at the end of floats, e.g. `1.2000` becomes `1.2`. default:`false`
+* `forceFloats`       — Force every integer value written to the file to be a float, e.g. `12` becomes `12.0`. default:`false`
+* `forceFloatsIn`     — Specify an array of object key names under which all integer values are treated as floats.
+  For example, serializing `{a:[1, 2, {a:3, b:4}], c:{a:5, d:6}` with `forceFloatsIn:['a']` would produce `{"a":[1.0, 2.0, {"a":3.0, "b":4}], "c":{"a":5.0, "d":6}}`.
+* `arrayPadding`      — Number of spaces to put inside brackets for arrays. default:`0`
+* `objectPadding`     — Number of spaces to put inside braces for objects.  default:`0`
+* `padding`           — Shorthand to set both `arrayPadding` and `objectPadding`. default:`0`
+* `beforeComma`       — Number of spaces to put before commas (for both arrays and objects). default:`0`
+* `afterComma`        — Number of spaces to put after commas (for both arrays and objects). default:`0`
+* `aroundComma`       — Shorthand to set both `beforeComma` and `afterComma`. default:`0`
+* `beforeColon_1`     — Number of spaces before a colon when the object is on one line. default:`0`
+* `afterColon_1`      — Number of spaces after a colon when the object is on one line. default:`0`
+* `beforeColonN`      — Number of spaces before a colon when the object is on multiple lines. default:`0`
+* `afterColonN`       — Number of spaces after a colon when the object is on multiple lines. default:`0`
+* `beforeColon`       — Shorthand to set both `beforeColon_1` and `beforeColonN`. default:`0`
+* `afterColon`        — Shorthand to set both `afterColon_1` and `afterColonN`. default:`0`
+* `aroundColon`       — Shorthand to set both `beforeColon` and `afterColon`. default:`0`
 * `lua`                 — (Lua only) Output a Lua table literal instead of JSON? default:`false`
 * `emptyTablesAreObjects` — (Lua only) Should `{}` in Lua become a JSON object (`{}`) or JSON array (`[]`)? default:`false` (array)
 
@@ -263,7 +264,7 @@ _Note that the JavaScript and Lua versions of NeatJSON do not provide a mechanis
 
 ## License & Contact
 
-NeatJSON is copyright ©2015–2022 by Gavin Kistner and is released under
+NeatJSON is copyright ©2015–2023 by Gavin Kistner and is released under
 the [MIT License](http://www.opensource.org/licenses/mit-license.php).
 See the LICENSE.txt file for more details.
 
