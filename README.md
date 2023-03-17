@@ -281,6 +281,9 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 ## History
 
+* **v0.10.6** — March 17, 2023
+  * Add TypeScript definitions for JavaScript library
+
 * **v0.10.5** — November 17, 2022
   * Fix issue #21: Strings containing `#` get an invalid escape added (Ruby only)
 
