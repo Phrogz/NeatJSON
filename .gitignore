@@ -1,1 +1,20 @@
 *.gem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+dist/
+build/
+.pytest_cache/
+.tox/
+.venv/
+venv/
+.mypy_cache/
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt

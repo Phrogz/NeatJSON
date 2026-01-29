@@ -1,8 +1,10 @@
 # NeatJSON
 
 [![Gem Version](https://badge.fury.io/rb/neatjson.svg)](http://badge.fury.io/rb/neatjson)
+[![Gem Downloads](http://ruby-gem-downloads-badge.herokuapp.com/neatjson?type=total&color=brightgreen)](https://rubygems.org/gems/neatjson)
+[![PyPI version](https://badge.fury.io/py/neatjson.svg)](https://badge.fury.io/py/neatjson)
 
-Pretty-print your JSON in Ruby or JavaScript or Lua with more power than is provided by `JSON.pretty_generate` (Ruby) or `JSON.stringify` (JS). For example, like Ruby's `pp` (pretty print), NeatJSON can keep objects on one line if they fit, but break them over multiple lines if needed.
+Pretty-print your JSON in Ruby, JavaScript, Lua, or Python with more power than is provided by `JSON.pretty_generate` (Ruby), `JSON.stringify` (JS), or `json.dumps` (Python). For example, like Ruby's `pp` (pretty print), NeatJSON can keep objects on one line if they fit, but break them over multiple lines if needed.
 
 **Features:**
 
@@ -27,7 +29,8 @@ Pretty-print your JSON in Ruby or JavaScript or Lua with more power than is prov
 * [Usage](#usage)
 * [Examples](#examples)
 * [Options](#options)
-* [License & Contact](#license--contact)
+  * [Python-Specific Features](#python-specific-features)
+* [License \& Contact](#license--contact)
 * [TODO (aka Known Limitations)](#todo-aka-known-limitations)
 * [History](#history)
 
@@ -37,6 +40,7 @@ Pretty-print your JSON in Ruby or JavaScript or Lua with more power than is prov
 * Ruby: `gem install neatjson`
 * JavaScript (web): Clone the GitHub repo and copy `javascript/neatjson.js`
 * Node.js: `npm install neatjson`
+* Python: `pip install neatjson`
 
 
 ## Usage
@@ -74,9 +78,16 @@ local neatJSON = require'neatjson'
 local json = neatJSON(value, options)
 ~~~
 
+**Python**:
+
+~~~ python
+from neatjson import neat_json
+json_str = neat_json(value, **options)
+~~~
+
 ## Examples
 
-_The following are all in Ruby, but similar options apply in JavaScript and Lua._
+_The following are all in Ruby, but similar options apply in JavaScript, Lua, and Python._
 
 ~~~ ruby
 require 'neatjson'
@@ -173,9 +184,11 @@ puts JSON.neat_generate( data, opts )
 
 
 ## Options
-You may pass any of the following options to `neat_generate` (Ruby) or `neatJSON` (JavaScript/Lua).
 
-**Note**: camelCase option names below use snake_case in Ruby. For example:
+You may pass any of the following options to `neat_generate` (Ruby), `neatJSON` (JavaScript/Lua), or `neat_json` (Python).
+
+**Note**: camelCase option names below use snake_case in Ruby and Python, with Python using keyword arguments instead of an options dict.
+For example:
 
 ~~~ js
 // JavaScript
@@ -192,12 +205,17 @@ local json = neatJSON( myValue, { arrayPadding=1, afterComma=1, beforeColonN=2 }
 json = JSON.neat_generate my_value, array_padding:1, after_comma:1, before_colon_n:2
 ~~~
 
-* `wrap`              — Maximum line width before wrapping. Use `false` to never wrap, `true` to always wrap. default:`80`
-* `indent`            — Whitespace used to indent each level when wrapping. default:`"  "` (two spaces)
-* `indentLast`        — Indent the closing bracket/brace for arrays and objects? default:`false`
-* `short`             — Put opening brackets on the same line as the first value, closing brackets on the same line as the last? default:`false`
+~~~ python
+# Python
+json_str = neat_json(my_value, array_padding=1, after_comma=1, before_colon_n=2, indent_last=True)
+~~~
+
+* `wrap`           — Maximum line width before wrapping. Use `false` to never wrap, `true` to always wrap. default:`80`
+* `indent`         — Whitespace used to indent each level when wrapping. default:`"  "` (two spaces)
+* `indentLast`     — Indent the closing bracket/brace for arrays and objects? default:`false`
+* `short`          — Put opening brackets on the same line as the first value, closing brackets on the same line as the last? default:`false`
   * _This causes the `indent` and `indentLast` options to be ignored, instead basing indentation on array and object padding._
-* `sort`              — Sort objects' keys in alphabetical order (`true`), or supply a lambda for custom sorting. default:`false`
+* `sort`           — Sort objects' keys in alphabetical order (`true`), or supply a lambda for custom sorting. default:`false`
   * If you supply a lambda to the `sort` option, it will be passed three values: the (string) name of the key, the associated value, and the object being sorted, e.g. `{ sort:->(key,value,hash){ Float(value) rescue Float::MAX } }`
 * `aligned`           — When wrapping objects, line up the colons (per object)? default:`false`
 * `decimals`          — Decimal precision for non-integer numbers; use `false` to keep values precise. default:`false`
@@ -261,10 +279,98 @@ neatJSON( obj, { sort:function(k,v){ return countByValue[v] } } );         // so
 
 _Note that the JavaScript and Lua versions of NeatJSON do not provide a mechanism for cascading sort in the same manner as Ruby._
 
+~~~ python
+# Python sorting examples
+obj = {"e": 3, "a": 2, "c": 3, "b": 2, "d": 1, "f": 3}
+
+neat_json(obj, sort=True)                                    # sort by key name
+# '{"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}'
+
+neat_json(obj, sort=lambda k: k)                             # sort by key name (long way)
+# '{"a":2,"b":2,"c":3,"d":1,"e":3,"f":3}'
+
+neat_json(obj, sort=lambda k, v: -v)                         # sort by descending value
+# '{"e":3,"c":3,"f":3,"a":2,"b":2,"d":1}'
+
+from collections import Counter
+counts = Counter(obj.values())
+neat_json(obj, sort=lambda k, v: counts[v])                  # sort by count of same value
+# '{"d":1,"a":2,"b":2,"e":3,"c":3,"f":3}'
+~~~
+
+### Python-Specific Features
+
+The Python version of NeatJSON has some additional features:
+
+* Python `tuple`s, `set`s, and other iterables are serialized as JSON arrays:
+
+  ~~~ python
+  neat_json((1, 2, 3))                # '[1,2,3]'
+  neat_json({1, 2, 3})                # '[1,2,3]' (order may vary)
+  neat_json(frozenset([1, 2]))        # '[1,2]' (order may vary)
+  neat_json(range(5))                 # '[0,1,2,3,4]'
+  neat_json(deque([1, 2, 3]))         # '[1,2,3]'
+  neat_json(x * 2 for x in range(3))  # '[0,2,4]'
+  ~~~
+
+* `namedtuple`s and `dataclass`es are serialized as JSON objects:
+
+  ~~~ python
+  from collections import namedtuple
+  Point = namedtuple('Point', ['x', 'y'])
+  neat_json(Point(3, 4))   # '{"x":3,"y":4}'
+  ~~~
+
+  ~~~ python
+  from dataclasses import dataclass
+
+  @dataclass
+  class Person:
+      name: str
+      age: int
+
+  neat_json(Person("Alice", 30))   # '{"name":"Alice","age":30}'
+  ~~~
+
+* `Enum` values are serialized using their `.value`:
+
+  ~~~ python
+  from enum import Enum
+
+  class Color(Enum):
+      RED = 1
+      GREEN = 2
+
+  neat_json(Color.RED)   # '1'
+  ~~~
+
+* `Decimal`s and `Fraction`s are serialized as JSON numbers:
+
+  ~~~ python
+  from decimal import Decimal
+  from fractions import Fraction
+
+  neat_json(Decimal("3.14159"))   # '3.14159'
+  neat_json(Fraction(1, 3))       # '0.3333333333333333'
+  ~~~
+
+* **Custom `__json__()` method**: Objects with a `__json__()` method will have that method called for serialization:
+
+  ~~~ python
+  class Point:
+      def __init__(self, x, y):
+          self.x = x
+          self.y = y
+      def __json__(self):
+          return {"x": self.x, "y": self.y}
+
+  neat_json(Point(3, 4))   # '{"x":3,"y":4}'
+  ~~~
+
 
 ## License & Contact
 
-NeatJSON is copyright ©2015–2023 by Gavin Kistner and is released under
+NeatJSON is copyright ©2015–2026 by Gavin Kistner and is released under
 the [MIT License](http://www.opensource.org/licenses/mit-license.php).
 See the LICENSE.txt file for more details.
 
@@ -280,6 +386,10 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 
 ## History
+
+* **v0.10.7** — January 28, 2026
+  * Add Python version
+    * _Thanks Copilot/Claude Opus 4.5_
 
 * **v0.10.6** — March 17, 2023
   * Add TypeScript definitions for JavaScript library
@@ -304,6 +414,7 @@ For other communication you can [email the author directly](mailto:!@phrogz.net?
 
 * **v0.9** — July 29, 2019
   * Add Lua version, serializing to both JSON and Lua table literals
+    * _Thanks Reid Beels_
   * All languages serialize Infinity/-Infinity to JSON as `9e9999` and `-9e9999`
   * All languages serialize NaN to JSON as `"NaN"`
 

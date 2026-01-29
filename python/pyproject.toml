@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neatjson"
+version = "0.10.7"
+description = "Pretty-print your JSON with more power than json.dumps provides."
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Gavin Kistner", email = "gavin@phrogz.net"}
+]
+maintainers = [
+    {name = "Gavin Kistner", email = "gavin@phrogz.net"}
+]
+keywords = ["json", "pretty-print", "formatting", "serialization"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: General",
+    "Typing :: Typed",
+]
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "mypy>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Phrogz/NeatJSON"
+Documentation = "https://github.com/Phrogz/NeatJSON#readme"
+Repository = "https://github.com/Phrogz/NeatJSON"
+Issues = "https://github.com/Phrogz/NeatJSON/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+neatjson = ["py.typed"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
