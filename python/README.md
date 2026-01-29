@@ -2,7 +2,7 @@
 
 Pretty-print your JSON in Python with more power than `json.dumps` provides.
 
-See the [main project README](../README.md) for full documentation.
+See the [main project README](https://github.com/Phrogz/NeatJSON#readme) for full documentation.
 
 ## Installation
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "neatjson"
-version = "0.10.7"
+version = "0.10.8"
 description = "Pretty-print your JSON with more power than json.dumps provides."
 readme = "README.md"
 license = {text = "MIT"}
@@ -56,5 +56,5 @@ warn_return_any = true
 warn_unused_configs = true
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["../test"]
 python_files = ["test_*.py"]
