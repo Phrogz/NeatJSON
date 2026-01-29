@@ -6,7 +6,7 @@ local function dump(v)
 		for i,v2 in ipairs(v) do s[i]=true table.insert(r,dump(v2)) end
 		for k,v2 in pairs(v) do
 			if not s[k] then
-				if type(k)=='string' and not reserved[string] and string.match(k,'^[%a_][%w_]*$') then
+				if type(k)=='string' and not reserved[k] and string.match(k,'^[%a_][%w_]*$') then
 					table.insert(r,k..'='..dump(v2))
 				else
 					table.insert(r,'['..dump(k)..']='..dump(v2))
@@ -80,4 +80,3 @@ print(("%d/%d test%s passed in %.2fms (%.0f tests per second)"):format(
 	elapsed,
 	1000 * count/elapsed
 ))
-

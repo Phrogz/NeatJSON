@@ -13,6 +13,8 @@ TESTS = [
 	{value:5.0001, tests:[
 		{json:"5.0001"},
 		{json:"5.000", opts:{decimals:3}},
+		{json:"5.0",   opts:{decimals:3, trim_trailing_zeros:true, force_floats:true}},
+		{json:"5.000", opts:{decimals:3, trim_trailing_zeros:false, force_floats:true}},
 	]},
 	{value:4.2, tests:[
 		{json:"4.2"},
@@ -30,6 +32,15 @@ TESTS = [
 	{value:"foo",       tests:[{json:"\"foo\""}]},
 	{value: :foo,       tests:[{json:"\"foo\""}]},
 	{value:"foo\nbar",  tests:[{json:"\"foo\\nbar\""}]},
+	{value:"foo\tbar",  tests:[{json:"\"foo\\tbar\""}]},
+	{value:"foo\rbar",  tests:[{json:"\"foo\\rbar\""}]},
+	{value:"foo\bbar",  tests:[{json:"\"foo\\bbar\""}]},
+	{value:"foo\fbar",  tests:[{json:"\"foo\\fbar\""}]},
+
+	{value:"foo${no}bar",  tests:[{json:"\"foo${no}bar\""}]},
+	{value:"foo\#{no}bar",  tests:[{json:"\"foo\#{no}bar\""}]},
+	{value:"foo\\bar",  tests:[{json:"\"foo\\\\bar\""}]},
+	{value:"foo/bar",  tests:[{json:"\"foo/bar\""}]},
 
 	{value:[1,2,3,4,[5,6,7,[8,9,10],11,12]], tests:[
 		{ json:"[1,2,3,4,[5,6,7,[8,9,10],11,12]]" },
@@ -174,7 +185,7 @@ TESTS = [
 		{ json:'{"a":{"b":{"c":{"d":{"e":{"f":{"g":{"h":{"i":{"j":{"k":{"l":{"m":1}}}}}}}}}}}}}', opts:{wrap:false} },
 		{ json:'{"a":{"b":{"c":{"d":{"e":{"f":{"g":{"h":{"i":{"j":{"k":{"l":{"m":1}}}}}}}}}}}}}', opts:{wrap:1,short:true} },
 		{ json:"{\n  \"a\":{\n    \"b\":{\n      \"c\":{\n        \"d\":{\n          \"e\":{\n            \"f\":{\n              \"g\":{\n                \"h\":{\n                  \"i\":{\n                    \"j\":{\n                      \"k\":{\n                        \"l\":{\n                          \"m\":1\n                        }\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}", opts:{wrap:1} },
-	]}, 
+	]},
 
 	# Issue #27
 	{value:{'b'=>2, a:1}, tests:[
@@ -183,6 +194,58 @@ TESTS = [
 		{json:'{"a":1,"b":2}', opts:{wrap:false, sort:->(k,v){k.to_s}}},
 		{json:'{"a":1,"b":2}', opts:{wrap:false, sort:->(k,v,o){k.to_s}}},
 		{json:'{"a":1,"b":2}', opts:{wrap:false, sort:true}},
+	]},
+
+	{value:{inf:1.0/0, neginf:-1.0/0, nan:0.0/0}, tests:[
+		{ json:'{"inf":9e9999,"nan":"NaN","neginf":-9e9999}', opts:{sort:true} },
+	]},
+
+	{value:[0, 1, 1.1, 1.555555], tests:[
+		{ json:'[0,1,1.1,1.555555]', opts:{force_floats:false} },
+		{ json:'[0.0,1.0,1.1,1.555555]', opts:{force_floats:true} },
+		{ json:'[0.000,1.000,1.100,1.556]', opts:{force_floats:true, decimals:3} },
+		{ json:'[0.0,1.0,1.1,1.556]', opts:{force_floats:true, decimals:3, trim_trailing_zeros:true} },
+		{ json:'[0,1,1.1,1.556]', opts:{force_floats:false, decimals:3, trim_trailing_zeros:true} },
+	]},
+
+	{value:{floats:[0, 1, 0.1, 1.555555], raw:[0, 1, 0.1, 1.555555]}, tests:[
+		{ json:'{"floats":[0,1,0.1,1.555555],"raw":[0,1,0.1,1.555555]}', opts:{force_floats:false} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.555555],"raw":[0.0,1.0,0.1,1.555555]}', opts:{force_floats:true} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.555555],"raw":[0,1,0.1,1.555555]}', opts:{force_floats_in:['floats']} },
+
+		{ json:'{"floats":[0,1,0.100,1.556],"raw":[0,1,0.100,1.556]}', opts:{force_floats:false, decimals:3} },
+		{ json:'{"floats":[0.000,1.000,0.100,1.556],"raw":[0.000,1.000,0.100,1.556]}', opts:{force_floats:true, decimals:3} },
+		{ json:'{"floats":[0.000,1.000,0.100,1.556],"raw":[0,1,0.100,1.556]}', opts:{force_floats_in:['floats'], decimals:3} },
+
+		{ json:'{"floats":[0,1,0.1,1.556],"raw":[0,1,0.1,1.556]}', opts:{force_floats:false, decimals:3, trim_trailing_zeros:true} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.556],"raw":[0.0,1.0,0.1,1.556]}', opts:{force_floats:true, decimals:3, trim_trailing_zeros:true} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.556],"raw":[0,1,0.1,1.556]}', opts:{force_floats_in:['floats'], decimals:3, trim_trailing_zeros:true} },
+	]},
+
+	{value:[1,2,3,{a:[4,5,{a:6, b:7}], b:[8,9,{a:10, b:11}]}], tests:[
+		{ json:'[1,2,3,{"a":[4,5,{"a":6,"b":7}],"b":[8,9,{"a":10,"b":11}]}]', opts:{} },
+		{ json:'[1.0,2.0,3.0,{"a":[4.0,5.0,{"a":6.0,"b":7.0}],"b":[8.0,9.0,{"a":10.0,"b":11.0}]}]', opts:{force_floats:true, wrap:false} },
+		{ json:'[1,2,3,{"a":[4.0,5.0,{"a":6.0,"b":7}],"b":[8,9,{"a":10.0,"b":11}]}]', opts:{force_floats_in:['a'], wrap:false} },
+	]},
+
+	{value:[1,2,3, {bar:[4,5,6], foo:[7,8,9]}], tests:[
+		{ json:%Q{[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7,8,9]\n\t}\n]}, opts:{wrap:20, indent:"\t"} },
+		{ json:%Q{[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7,8,9]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats_in:["bar"]} },
+		{ json:%Q{[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats_in:["foo"]} },
+		{ json:%Q{[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats_in:["foo", "bar"]} },
+		{ json:%Q{[\n\t1.0,\n\t2.0,\n\t3.0,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]}, opts:{wrap:20, indent:"\t", force_floats:true} },
+	]},
+
+	# Issue #32
+	{value:[1,2], tests:[
+		{ json:"[\n  1,\n  2\n]", opts:{wrap:true, decimals:3} },
+		{ json:"[\n  1,\n  2\n]", opts:{wrap:true, decimals:3, trim_trailing_zeros:true} },
+	]},
+
+	# Issue #33
+	{value:[1,2], tests:[
+		{ json:"[\n1,\n2\n]", opts:{wrap:true, indent:'', decimals:3, trim_trailing_zeros:true} },
+		{ json:"[1,\n 2]",    opts:{wrap:true, indent:'', decimals:3, trim_trailing_zeros:true, short:true} },
 	]},
 ]
 

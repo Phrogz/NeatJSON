@@ -15,6 +15,9 @@ exports.tests = [
 	{value:5.0001, tests:[
 		{json:"5.0001"},
 		{json:"5.000", opts:{decimals:3}},
+		{json:"5",     opts:{decimals:3, trimTrailingZeros:true}},
+		{json:"5.0",   opts:{decimals:3, trimTrailingZeros:true, forceFloats:true}},
+		{json:"5.000", opts:{decimals:3, trimTrailingZeros:false, forceFloats:true}},
 	]},
 	{value:4.2, tests:[
 		{json:"4.2"},
@@ -30,8 +33,16 @@ exports.tests = [
 	{value:-2.4,  tests:[{json:"-2",   opts:{decimals:0}}]},
 
 	{value:"foo",       tests:[{json:"\"foo\""}]},
-	// {value: :foo,       tests:[{json:"\"foo\""}]},
 	{value:"foo\nbar",  tests:[{json:"\"foo\\nbar\""}]},
+	{value:"foo\tbar",  tests:[{json:"\"foo\\tbar\""}]},
+	{value:"foo\rbar",  tests:[{json:"\"foo\\rbar\""}]},
+	{value:"foo\bbar",  tests:[{json:"\"foo\\bbar\""}]},
+	{value:"foo\fbar",  tests:[{json:"\"foo\\fbar\""}]},
+
+	{value:"foo${no}bar",  tests:[{json:"\"foo${no}bar\""}]},
+	{value:"foo\#{no}bar",  tests:[{json:"\"foo\#{no}bar\""}]},
+	{value:"foo\\bar",  tests:[{json:"\"foo\\\\bar\""}]},
+	{value:"foo/bar",  tests:[{json:"\"foo/bar\""}]},
 
 	{value:[1,2,3,4,[5,6,7,[8,9,10],11,12]], tests:[
 		{ json:"[1,2,3,4,[5,6,7,[8,9,10],11,12]]" },
@@ -169,15 +180,56 @@ exports.tests = [
 		{ json:"{\n  \"a\":{\n    \"b\":{\n      \"c\":{\n        \"d\":{\n          \"e\":{\n            \"f\":{\n              \"g\":{\n                \"h\":{\n                  \"i\":{\n                    \"j\":{\n                      \"k\":{\n                        \"l\":{\n                          \"m\":1\n                        }\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}", opts:{wrap:1} },
 	]},
 
-	// {value:Class.new{ def to_json(*a); {a:1}.to_json(*a); end }.new, tests:[
-	// 	{ json:'{  "a":1}' },
-	// 	{ json:'{  "a":1}', opts:{wrap:true} },
-	// 	{ json:'{"a":1}',   opts:{indent:''} },
-	// ]},
+	{value:{inf:1/0, neginf:-1/0, nan:0/0}, tests:[
+		{ json:'{"inf":9e9999,"nan":"NaN","neginf":-9e9999}', opts:{sort:true} },
+	]},
 
-	// {value:Class.new{ def to_json(*a); JSON.neat_generate({a:1},*a); end }.new, tests:[
-	// 	{ json:'{"a":1}' },
-	// 	{ json:"{\n  \"a\":1\n}", opts:{wrap:true} }
-	// ]}
+	{value:[0, 1, 1.1, 1.555555], tests:[
+		{ json:'[0,1,1.1,1.555555]', opts:{forceFloats:false} },
+		{ json:'[0.0,1.0,1.1,1.555555]', opts:{forceFloats:true} },
+		{ json:'[0.000,1.000,1.100,1.556]', opts:{forceFloats:true, decimals:3} },
+		{ json:'[0.0,1.0,1.1,1.556]', opts:{forceFloats:true, decimals:3, trimTrailingZeros:true} },
+		{ json:'[0,1,1.1,1.556]', opts:{forceFloats:false, decimals:3, trimTrailingZeros:true} },
+	]},
+
+	{value:{floats:[0, 1, 0.1, 1.555555], raw:[0, 1, 0.1, 1.555555]}, tests:[
+		{ json:'{"floats":[0,1,0.1,1.555555],"raw":[0,1,0.1,1.555555]}', opts:{forceFloats:false} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.555555],"raw":[0.0,1.0,0.1,1.555555]}', opts:{forceFloats:true} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.555555],"raw":[0,1,0.1,1.555555]}', opts:{forceFloatsIn:['floats']} },
+
+		{ json:'{"floats":[0,1,0.100,1.556],"raw":[0,1,0.100,1.556]}', opts:{forceFloats:false, decimals:3} },
+		{ json:'{"floats":[0.000,1.000,0.100,1.556],"raw":[0.000,1.000,0.100,1.556]}', opts:{forceFloats:true, decimals:3} },
+		{ json:'{"floats":[0.000,1.000,0.100,1.556],"raw":[0,1,0.100,1.556]}', opts:{forceFloatsIn:['floats'], decimals:3} },
+
+		{ json:'{"floats":[0,1,0.1,1.556],"raw":[0,1,0.1,1.556]}', opts:{forceFloats:false, decimals:3, trimTrailingZeros:true} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.556],"raw":[0.0,1.0,0.1,1.556]}', opts:{forceFloats:true, decimals:3, trimTrailingZeros:true} },
+		{ json:'{"floats":[0.0,1.0,0.1,1.556],"raw":[0,1,0.1,1.556]}', opts:{forceFloatsIn:['floats'], decimals:3, trimTrailingZeros:true} },
+	]},
+
+	{value:[1,2,3,{a:[4,5,{a:6, b:7}], b:[8,9,{a:10, b:11}]}], tests:[
+		{ json:'[1,2,3,{"a":[4,5,{"a":6,"b":7}],"b":[8,9,{"a":10,"b":11}]}]', opts:{} },
+		{ json:'[1.0,2.0,3.0,{"a":[4.0,5.0,{"a":6.0,"b":7.0}],"b":[8.0,9.0,{"a":10.0,"b":11.0}]}]', opts:{forceFloats:true, wrap:false} },
+		{ json:'[1,2,3,{"a":[4.0,5.0,{"a":6.0,"b":7}],"b":[8,9,{"a":10.0,"b":11}]}]', opts:{forceFloatsIn:['a'], wrap:false} },
+	]},
+
+	{value:[1,2,3, {bar:[4,5,6], foo:[7,8,9]}], tests:[
+		{ json:'[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7,8,9]\n\t}\n]', opts:{wrap:20, indent:"\t"} },
+		{ json:'[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7,8,9]\n\t}\n]', opts:{wrap:20, indent:"\t", forceFloatsIn:['bar']} },
+		{ json:'[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4,5,6],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts:{wrap:20, indent:"\t", forceFloatsIn:['foo']} },
+		{ json:'[\n\t1,\n\t2,\n\t3,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts:{wrap:20, indent:"\t", forceFloatsIn:['foo', 'bar']} },
+		{ json:'[\n\t1.0,\n\t2.0,\n\t3.0,\n\t{\n\t\t"bar":[4.0,5.0,6.0],\n\t\t"foo":[7.0,8.0,9.0]\n\t}\n]', opts:{wrap:20, indent:"\t", forceFloats:true} },
+	]},
+
+	// Issue #32
+	{value:[1,2], tests:[
+		{ json:'[\n  1,\n  2\n]', opts:{wrap:true, decimals:3} },
+		{ json:'[\n  1,\n  2\n]', opts:{wrap:true, decimals:3, trimTrailingZeros:true} },
+	]},
+
+	// Issue #33
+	{value:[1,2], tests:[
+		{ json:'[\n1,\n2\n]', opts:{wrap:true, indent:'', decimals:3, trimTrailingZeros:true} },
+		{ json:'[1,\n 2]',    opts:{wrap:true, indent:'', decimals:3, trimTrailingZeros:true, short:true} },
+	]},
 ]
 
